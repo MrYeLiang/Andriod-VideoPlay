@@ -24,7 +24,13 @@ set_target_properties(swresample PROPERTIES IMPORTED_LOCATION ${FF}/libswresampl
 add_library(native-lib
             SHARED
             src/main/cpp/native-lib.cpp
-             )
+            src/main/cpp/IPlayerProxy.cpp
+            src/main/cpp/IPlayerBuilder.cpp
+            src/main/cpp/XThread.cpp
+            src/main/cpp/FFDemux.cpp
+            src/main/cpp/FFPlayerBuilder.cpp
+            src/main/cpp/IPlayerBuilder.cpp
+            )
 
 find_library(log-lib
               log )
