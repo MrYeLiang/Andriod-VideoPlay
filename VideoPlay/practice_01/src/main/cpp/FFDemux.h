@@ -8,7 +8,7 @@
 #include "IDemux.h"
 #include <mutex>
 
-struct AVForMatContext;
+struct AVFormatContext;
 
 class FFDemux: public IDemux{
 public:
@@ -29,7 +29,7 @@ public:
     FFDemux();
 
 private:
-    AVForMatContext *ic = 0;
+    AVFormatContext *ic = 0;
     std::mutex mux;
     int audioStream = 1;
     int videoStream = 0;

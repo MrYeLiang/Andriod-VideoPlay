@@ -11,7 +11,7 @@ void IPlayerProxy::Init(void *vm) {
         FFPlayerBuilder::InitHard(vm);
     }
     if (!player) {
-        player = FFPlayerBuilder::Get()->BuilderPlayer();
+        //player = FFPlayerBuilder::Get()->BuilderPlayer();
     }
 }
 

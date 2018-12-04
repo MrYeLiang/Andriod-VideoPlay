@@ -7,8 +7,9 @@
 
 
 #include <mutex>
+#include "IPlayer.h"
 
-class IPlayerProxy : public IPlayerProxy {
+class IPlayerProxy : public IPlayer {
 public:
     static IPlayerProxy *Get() {
         static IPlayerProxy px;
@@ -19,7 +20,7 @@ public:
 
     virtual bool Open(const char *path);
 
-    virtual bool Close();
+    virtual void Close();
 
     virtual bool Start();
 
