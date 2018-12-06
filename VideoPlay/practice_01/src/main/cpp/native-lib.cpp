@@ -11,5 +11,5 @@ JNIEXPORT void JNICALL
 Java_com_practice_01_videoplay_SurfaceView_initView(JNIEnv *env,
                                                     jobject instance, jobject surface) {
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
-    IPlayerProxy::Get()->Init(win);
+    IPlayerProxy::Get()->InitView(win);
 }

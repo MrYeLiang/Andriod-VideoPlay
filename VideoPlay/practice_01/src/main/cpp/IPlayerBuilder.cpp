@@ -2,6 +2,8 @@
 // Created by 叶亮 on 2018/12/2.
 //
 #include "IPlayerBuilder.h"
+#include "IDemux.h"
+#include "IDecode.h"
 
 IPlayer *IPlayerBuilder::BuilderPlayer(unsigned char index) {
     IPlayer *play = CreatePlayer(index);
@@ -16,4 +18,7 @@ IPlayer *IPlayerBuilder::BuilderPlayer(unsigned char index) {
     IDecode *adecode = CreateDecode();
 
     //解码器观察解封装
+    de->AddObs(vdecode);
+    de->AddObs(adecode);
+
 }

@@ -29,7 +29,7 @@ public:
 protected:
     IPlayerProxy() {}
 
-    IPlayerProxy *player = 0;
+    IPlayer *player = 0;
     std::mutex mux;
 };
 

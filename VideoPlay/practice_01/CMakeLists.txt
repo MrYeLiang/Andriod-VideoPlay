@@ -30,6 +30,8 @@ add_library(native-lib
             src/main/cpp/FFDemux.cpp
             src/main/cpp/FFPlayerBuilder.cpp
             src/main/cpp/IPlayerBuilder.cpp
+            src/main/cpp/IObserver.cpp
+            src/main/cpp/SLAudioPlay.cpp
             )
 
 find_library(log-lib
