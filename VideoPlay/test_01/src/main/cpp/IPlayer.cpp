@@ -76,7 +76,6 @@ void IPlayer::Close()
         demux->Close();
     mux.unlock();
 
-
 }
 
 bool IPlayer::Open(const char *path)

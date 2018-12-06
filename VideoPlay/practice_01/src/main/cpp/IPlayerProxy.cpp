@@ -35,7 +35,7 @@ void IPlayerProxy::Close()
 
 bool IPlayerProxy::Open(const char *path)
 {
-    bool re = false;
+    bool re;
     mux.lock();
     re = player->Open(path);
     mux.unlock();
