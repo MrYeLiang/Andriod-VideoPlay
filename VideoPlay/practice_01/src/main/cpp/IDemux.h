@@ -7,6 +7,7 @@
 
 #include "IObserver.h"
 #include "XParameter.h"
+#include "XThread.h"
 
 
 class IDemux : public IObserver {

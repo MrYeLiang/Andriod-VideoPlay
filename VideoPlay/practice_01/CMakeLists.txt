@@ -34,6 +34,7 @@ add_library(native-lib
             src/main/cpp/SLAudioPlay.cpp
             src/main/cpp/IPlayer.cpp
             src/main/cpp/IAudioPlay.cpp
+            src/main/cpp/IDemux.cpp
             )
 
 find_library(log-lib
