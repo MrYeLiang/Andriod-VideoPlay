@@ -8,7 +8,7 @@
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_practice_01_videoplay_SurfaceView_initView(JNIEnv *env,
+Java_com_practice_101_videoplay_SurfaceView_initView(JNIEnv *env,
                                                     jobject instance, jobject surface) {
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
     IPlayerProxy::Get()->InitView(win);
@@ -16,7 +16,7 @@ Java_com_practice_01_videoplay_SurfaceView_initView(JNIEnv *env,
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_practice_01_videoplay_MainActivity_Play(JNIEnv *env,
+Java_com_practice_101_videoplay_MainActivity_play(JNIEnv *env,
                                                     jobject instance, jstring url_) {
     const  char *url = env->GetStringUTFChars(url_,0);
 
