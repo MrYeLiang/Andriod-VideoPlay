@@ -8,7 +8,7 @@
 #include "XParameter.h"
 #include "IDecode.h"
 
-struct AVCodeContext;
+struct AVCodecContext;
 struct AVFrame;
 class FFDecode:public IDecode
 {
@@ -26,7 +26,7 @@ public:
     virtual XData RecvFrame();
 
 protected:
-    AVCodeContext *codec = 0;
+    AVCodecContext *codec = 0;
     AVFrame *frame = 0;
     std::mutex mux;
 

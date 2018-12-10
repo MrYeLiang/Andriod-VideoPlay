@@ -19,10 +19,10 @@ public:
     virtual void Clear();
 
     //future模型 发送数据到线程解码器
-    virtual bool SendPacket() = 0;
+    virtual bool SendPacket(XData pkt) = 0;
 
     //从线程中获取解码结果 再次调用会复用上次空间，线程不安全
-    virtual XData RecyFrame() = 0;
+    virtual XData RecvFrame() = 0;
 
     //由主体notify的数据 阻塞
     virtual  void Updata(XData pkt);

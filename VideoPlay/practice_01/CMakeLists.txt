@@ -36,7 +36,8 @@ add_library(native-lib
             src/main/cpp/IAudioPlay.cpp
             src/main/cpp/IDemux.cpp
             src/main/cpp/IVideoView.cpp
-            src/main/cpp/XParameter.cpp
+            src/main/cpp/FFDecode.cpp
+            src/main/cpp/IDecode.cpp
             )
 
 find_library(log-lib
