@@ -72,7 +72,7 @@ bool FFDecode::Open(XParameter para, bool isHard)
     if(codec->codec_type == AVMEDIA_TYPE_VIDEO){
         this->isAudio = false;
     } else{
-        this->isAudio = false;
+        this->isAudio = true;
     }
 
     mux.unlock();
