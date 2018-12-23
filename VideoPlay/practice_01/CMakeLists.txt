@@ -41,6 +41,7 @@ add_library(native-lib
             src/main/cpp/GLVideoView.cpp
             src/main/cpp/XTexture.cpp
             src/main/cpp/XShader.cpp
+            src/main/cpp/XEGL.cpp
             )
 
 find_library(log-lib

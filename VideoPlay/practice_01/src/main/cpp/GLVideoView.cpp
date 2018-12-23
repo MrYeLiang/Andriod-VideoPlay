@@ -3,3 +3,17 @@
 //
 
 #include "GLVideoView.h"
+
+void GLVideoView::SetRender(void *win)
+{
+    view = win;
+}
+
+void GLVideoView::Close()
+{
+    mux.lock();
+    if(txt){
+        txt ->Drop();
+        txt = 0;
+    }
+}
