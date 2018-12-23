@@ -38,6 +38,9 @@ add_library(native-lib
             src/main/cpp/IVideoView.cpp
             src/main/cpp/FFDecode.cpp
             src/main/cpp/IDecode.cpp
+            src/main/cpp/GLVideoView.cpp
+            src/main/cpp/XTexture.cpp
+            src/main/cpp/XShader.cpp
             )
 
 find_library(log-lib
