@@ -12,8 +12,27 @@ extern "C"
 {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
+#include <libavcodec/jni.h>
 }
 
+
+//当前时间戳 clock
+long long GetNowMs()
+{
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    int sec = tv.tv_sec%360000;
+    long long t = sec*1000+tv.tv_usec/1000;
+    return t;
+}
+
+extern "C"
+JNIEXPORT
+jint JNI_OnLoad(JavaVM *vm,void *res)
+{
+    av_jni_set_java_vm(vm,0);
+    return JNI_VERSION_1_4;
+}
 
 //pts 显示时间   dts解码时间
 
@@ -83,10 +102,10 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
 
     //==================================== 视频解码器 ================================================
     //1 软解码器
-    AVCodec *vcodec = avcodec_find_decoder(ic->streams[videoStream]->codecpar->codec_id);
+    //AVCodec *vcodec = avcodec_find_decoder(ic->streams[videoStream]->codecpar->codec_id);
 
     //硬解码
-    //codec = avcodec_find_decoder_by_name("h264_mediacodec");
+    AVCodec *vcodec = avcodec_find_decoder_by_name("h264_mediacodec");
 
     if (!vcodec) {
         LOGEW("avcodec_find failed");
@@ -98,7 +117,7 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
     //3 解码器参数赋值
     avcodec_parameters_to_context(vc, ic->streams[videoStream]->codecpar);
 
-    vc->thread_count = 1;
+    vc->thread_count = 8;
 
     //4 打开解码器
     re = avcodec_open2(vc, 0, 0);
@@ -131,7 +150,20 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
     AVPacket *pkt = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
 
+    //用于测试性能
+    long long start = GetNowMs();
+    int frameCount = 0;
+
     for (;;) {
+
+        //超过三秒
+        if(GetNowMs() - start >= 3000)
+        {
+            LOGEW("now decode fps is %d", frameCount/3);
+            start = GetNowMs();
+            frameCount = 0;
+        }
+
         int re = av_read_frame(ic, pkt);
         if (re != 0) {
             LOGEW("读取到结尾处！");
@@ -162,10 +194,34 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
             if (re != 0) {
                 break;
             }
-            LOGEW("avcodec_receive_frame %lld", frame->pts);
+            //LOGEW("avcodec_receive_frame %lld", frame->pts);
+
+            //如果是视频帧
+            if(cc == vc){
+                frameCount++;
+            }
         }
     }
 
 
     avformat_close_input(&ic);
 }
+
+
+//log===================
+//单线程解码
+        /*
+        W/test: now decode fps is 18
+        W/test: now decode fps is 18
+        W/test: now decode fps is 19
+        W/test: now decode fps is 19
+        W/test: now decode fps is 19
+        W/test: now decode fps is 19*/
+// 6线程解码
+
+      /*  W/test: now decode fps is 105  */
+
+// 硬解码
+
+        /*W/test: now decode fps is 95
+        W/test: now decode fps is 92  */
