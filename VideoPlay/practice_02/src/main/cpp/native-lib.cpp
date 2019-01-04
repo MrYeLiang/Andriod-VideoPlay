@@ -96,16 +96,16 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
         }
     }
 
-    //5 获取音频流信息
+    //5 获取音频流信息 和上面遍历取出视音频的流信息是一样的，这种方式更直接
     audioStream = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
     LOGEW("av_find_best_stream audioStream %d", audioStream);
 
     //==================================== 视频解码器 ================================================
     //1 软解码器
-    //AVCodec *vcodec = avcodec_find_decoder(ic->streams[videoStream]->codecpar->codec_id);
+    AVCodec *vcodec = avcodec_find_decoder(ic->streams[videoStream]->codecpar->codec_id);
 
     //硬解码
-    AVCodec *vcodec = avcodec_find_decoder_by_name("h264_mediacodec");
+    //AVCodec *vcodec = avcodec_find_decoder_by_name("h264_mediacodec");
 
     if (!vcodec) {
         LOGEW("avcodec_find failed");
@@ -153,10 +153,11 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
     //用于测试性能
     long long start = GetNowMs();
     int frameCount = 0;
-
+    
+    //==================================== 开始解码 ================================================
     for (;;) {
 
-        //超过三秒
+        //这里是测试每秒解码的帧数  每三秒解码多少帧
         if(GetNowMs() - start >= 3000)
         {
             LOGEW("now decode fps is %d", frameCount/3);
@@ -177,7 +178,7 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
             cc = ac;
         }
 
-        //发送到线程中解码
+        //1 发送到线程中解码
         re = avcodec_send_packet(cc, pkt);
 
         //清理
@@ -189,7 +190,9 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
             continue;
         }
 
+        //没一帧可能对应多个帧数据，所以要遍历取
         for (;;) {
+            //2 解帧数据
             re = avcodec_receive_frame(cc, frame);
             if (re != 0) {
                 break;
