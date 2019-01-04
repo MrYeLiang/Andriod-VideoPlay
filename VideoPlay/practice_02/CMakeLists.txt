@@ -15,6 +15,12 @@ set_target_properties(avformat PROPERTIES IMPORTED_LOCATION ${FF}/libavformat.so
 add_library(avutil SHARED IMPORTED)
 set_target_properties(avutil PROPERTIES IMPORTED_LOCATION ${FF}/libavutil.so)
 
+add_library(swscale SHARED IMPORTED)
+set_target_properties(swscale PROPERTIES IMPORTED_LOCATION ${FF}/libswscale.so)
+
+add_library(swresample SHARED IMPORTED)
+set_target_properties(swresample PROPERTIES IMPORTED_LOCATION ${FF}/libswresample.so)
+
 add_library(native-lib
             SHARED
             src/main/cpp/native-lib.cpp
@@ -23,6 +29,6 @@ add_library(native-lib
 find_library(log-lib
               log )
 target_link_libraries(native-lib
-                      avcodec avformat avutil
+                      avcodec avformat avutil swscale swresample
                       android
                        ${log-lib} )

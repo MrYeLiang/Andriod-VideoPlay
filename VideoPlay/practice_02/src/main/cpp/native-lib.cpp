@@ -13,6 +13,8 @@ extern "C"
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavcodec/jni.h>
+#include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
 }
 
 
@@ -26,6 +28,7 @@ long long GetNowMs()
     return t;
 }
 
+//用于硬解码
 extern "C"
 JNIEXPORT
 jint JNI_OnLoad(JavaVM *vm,void *res)
@@ -55,10 +58,10 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
     //2 打开文件
     int re = avformat_open_input(&ic, path, 0, 0);
 
-    if (re == 0) {
+    if (re != 0) {
         LOGEW("avformat_open_input %s success!", path);
     } else {
-        LOGEW("avformat_open_input %s failed!: %s", av_err2str(re));
+        LOGEW("avformat_open_input failed!: %s", av_err2str(re));
     }
 
     //3 获取流信息
@@ -146,15 +149,43 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
         LOGEW("avcodec_open2 audio failed!");
     }
 
-    //4 读取帧数据
+
+    //==================================== 开始解码 ================================================
+
+    //1 定义帧数据
     AVPacket *pkt = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
 
     //用于测试性能
     long long start = GetNowMs();
     int frameCount = 0;
-    
-    //==================================== 开始解码 ================================================
+
+    //2 像素格式转换的上下文
+    SwsContext *vctx = NULL;
+
+    int outwWidth = 1280;
+    int outHeight = 720;
+    char *rgb = new char[1920*1080*4];
+    char *pcm = new char[48000*4*2];
+
+    //3 音频重采样上下文初始化
+    SwrContext *actx = swr_alloc();
+    actx = swr_alloc_set_opts(actx,
+                              av_get_default_channel_layout(2),
+                              AV_SAMPLE_FMT_S16,
+                              ac->sample_rate,
+                              av_get_default_channel_layout(ac->channels),
+                              ac->sample_fmt,ac->sample_rate,0,0);
+
+    re = swr_init(actx);
+    if(re != 0)
+    {
+        LOGEW("swr_init failed!");
+    }else
+    {
+        LOGEW("swr_init success!");
+    }
+
     for (;;) {
 
         //这里是测试每秒解码的帧数  每三秒解码多少帧
@@ -190,7 +221,7 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
             continue;
         }
 
-        //没一帧可能对应多个帧数据，所以要遍历取
+        //每一帧可能对应多个帧数据，所以要遍历取
         for (;;) {
             //2 解帧数据
             re = avcodec_receive_frame(cc, frame);
@@ -202,11 +233,52 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
             //如果是视频帧
             if(cc == vc){
                 frameCount++;
+
+                //3 初始化像素格式转换的上下文
+                vctx = sws_getCachedContext(vctx,
+                                            frame->width,
+                                            frame->height,
+                                            (AVPixelFormat)frame->format,
+                                            outwWidth,
+                                            outHeight,
+                                            AV_PIX_FMT_RGBA,
+                                            SWS_FAST_BILINEAR,
+                                            0,0,0);
+
+                if(!vctx){
+                    LOGEW("sws_getCachedContext failed!");
+                }else
+                {
+                    uint8_t  *data[AV_NUM_DATA_POINTERS] = {0};
+                    data[0] = (uint8_t *)rgb;
+                    int lines[AV_NUM_DATA_POINTERS] = {0};
+                    lines[0] = outwWidth * 4;
+                    int h = sws_scale(vctx,
+                                      (const uint8_t **)frame->data,
+                                      frame->linesize,
+                                      0,
+                                      frame->height,
+                                      data,
+                                      lines);
+                    LOGEW("sws_scale = %d",h);
+                }
+
+            }else //音频帧
+            {
+                uint8_t  *out[2] = {0};
+                out[0] = (uint8_t*)pcm;
+
+                //音频重采样
+                int len = swr_convert(actx,out,frame->nb_samples,(const uint8_t**)frame->data,frame->nb_samples);
+                LOGEW("swr_convert = %d", len);
             }
         }
     }
 
+    delete rgb;
+    delete pcm;
 
+    //关闭上下文
     avformat_close_input(&ic);
 }
 
