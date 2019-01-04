@@ -4,6 +4,8 @@
 #include <jni.h>
 #include <string>
 #include <android/log.h>
+#include <android/native_window.h>
+#include <android/native_window_jni.h>
 
 #define  LOGEW(...) __android_log_print(ANDROID_LOG_WARN, "test",__VA_ARGS__)
 
@@ -45,9 +47,8 @@ static double r2d(AVRational r) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
-                                              jobject instance, jstring url_) {
-
+Java_com_pracitce_videoplay_PlayView_open(JNIEnv *env, jobject instance, jstring url_,
+                                          jobject surface) {
     const char *path = env->GetStringUTFChars(url_, 0);
 
     //1 初始化解封装
@@ -186,6 +187,11 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
         LOGEW("swr_init success!");
     }
 
+    //4 显示窗口初始化
+    ANativeWindow *nwin = ANativeWindow_fromSurface(env,surface);
+    ANativeWindow_setBuffersGeometry(nwin,outwWidth,outHeight,WINDOW_FORMAT_RGBA_8888);
+    ANativeWindow_Buffer wbuf;
+
     for (;;) {
 
         //这里是测试每秒解码的帧数  每三秒解码多少帧
@@ -261,6 +267,14 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
                                       data,
                                       lines);
                     LOGEW("sws_scale = %d",h);
+
+                    if(h > 0)
+                    {
+                        ANativeWindow_lock(nwin,&wbuf,0);
+                        uint8_t  *dst = (uint8_t*)wbuf.bits;
+                        memcpy(dst, rgb, outwWidth*outHeight*4);
+                        ANativeWindow_unlockAndPost(nwin);
+                    }
                 }
 
             }else //音频帧
@@ -280,23 +294,25 @@ Java_com_pracitce_videoplay_MainActivity_open(JNIEnv *env,
 
     //关闭上下文
     avformat_close_input(&ic);
+    env->ReleaseStringUTFChars(url_, path);
 }
+
 
 
 //log===================
 //单线程解码
-        /*
-        W/test: now decode fps is 18
-        W/test: now decode fps is 18
-        W/test: now decode fps is 19
-        W/test: now decode fps is 19
-        W/test: now decode fps is 19
-        W/test: now decode fps is 19*/
+/*
+W/test: now decode fps is 18
+W/test: now decode fps is 18
+W/test: now decode fps is 19
+W/test: now decode fps is 19
+W/test: now decode fps is 19
+W/test: now decode fps is 19*/
 // 6线程解码
 
-      /*  W/test: now decode fps is 105  */
+/*  W/test: now decode fps is 105  */
 
 // 硬解码
 
-        /*W/test: now decode fps is 95
-        W/test: now decode fps is 92  */
+/*W/test: now decode fps is 95
+W/test: now decode fps is 92  */
