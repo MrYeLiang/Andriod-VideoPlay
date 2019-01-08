@@ -16,6 +16,4 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public native void open(String url, SurfaceView surfaceView);
-
 }

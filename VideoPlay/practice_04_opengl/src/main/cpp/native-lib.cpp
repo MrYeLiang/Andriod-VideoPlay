@@ -40,8 +40,9 @@ static const char *fragYUV420P = GET_STR(
 GLint InitShader(const char *const code, GLint type){
     //创建shader
     GLint sh = glCreateShader(type);
-    if(sh = 0){
+    if(sh == 0){
         LOGD("glCreateShader %d failed!", type);
+        return 0;
     }
 
     //加载shader
@@ -67,13 +68,15 @@ GLint InitShader(const char *const code, GLint type){
 
 }
 
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_practice_1opengl_MainActivity_open(JNIEnv *env, jobject instance, jstring url_, jobject surface) {
+Java_com_practice_1opengl_PlayView_open(JNIEnv *env, jobject instance, jstring url_,
+                                        jobject surfaceView) {
     const char *url = env->GetStringUTFChars(url_, 0);
 
     //1 获取原始窗口
-    ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
+    ANativeWindow *nwin = ANativeWindow_fromSurface(env, surfaceView);
 
 
     //=======================================EGL

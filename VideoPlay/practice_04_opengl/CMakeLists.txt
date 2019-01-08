@@ -11,4 +11,5 @@ find_library(log-lib
 target_link_libraries(native-lib
                       GLESv2
                       EGL
+                      android
                        ${log-lib} )
