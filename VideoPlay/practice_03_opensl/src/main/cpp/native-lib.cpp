@@ -42,6 +42,12 @@ void PcmCall(SLAndroidSimpleBufferQueueItf bf, void *contex)
     LOGD("PcmCall");
     static FILE *fp = NULL;
     static char *buf = NULL;
+
+    if(!buf)
+    {
+        buf = new char[1024 * 1024];
+    }
+
     if(!fp)
     {
         fp = fopen("/storage/emulated/0/test.pcm", "rb");
