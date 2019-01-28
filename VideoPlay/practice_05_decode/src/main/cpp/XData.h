@@ -5,7 +5,9 @@
 #ifndef VIDEOPLAY_XDATA_H
 #define VIDEOPLAY_XDATA_H
 
-class XData {
-
+struct XData {
+    unsigned char *data = 0;
+    int size = 0;
+    void Drop();
 };
 #endif //VIDEOPLAY_XDATA_H
