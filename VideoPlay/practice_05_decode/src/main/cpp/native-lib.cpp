@@ -3,12 +3,12 @@
 //
 
 #include <jni.h>
-#include <string>
-
 #include "FFDemux.h"
 #include "Xlog.h"
 #include "IObserver.h"
 #include "XData.h"
+#include <unistd.h>
+#include <sys/syscall.h>
 
 class TestObs:public IObserver
 {
@@ -23,14 +23,16 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_videoplay_MainActivity_decode(JNIEnv *env, jobject instance) {
 
-   /* IDemux *de = new FFDemux();
+    /*IDemux *de = new FFDemux();
     de->Open("");*/
 
     //测试代码
     TestObs *obs = new TestObs;
     IDemux *de = new FFDemux;
     de->AddObs(obs);
-    de ->Open("");
+    de ->Open("/storage/emulated/0/video.mp4");
+    int tid = (int)syscall(SYS_gettid);
+    XLOGI("主进程id: = %d",tid);
     de->Start();
     XSleep(3000);
     de->Stop();

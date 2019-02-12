@@ -4,8 +4,9 @@
 
 #include "XThread.h"
 #include "Xlog.h"
-
 #include <thread>
+#include <sys/syscall.h>
+#include <unistd.h>
 
 using namespace std;
 void XSleep(int mis)
@@ -18,16 +19,18 @@ void XSleep(int mis)
 void XThread::Start()
 {
     isExit = false;
-    XLOGI("线程函数进入");
     thread th(&XThread::ThreadMain, this);
-    XLOGI("线程函数退出");
-    isRuning = false;
+    th.detach();
 }
 
 void XThread::ThreadMain()
 {
     isRuning = true;
     XLOGI("线程函数进入");
+
+    int tid = (int)syscall(SYS_gettid);
+    XLOGI("current processid = %d",tid);
+
     Main();
     XLOGI("线程函数退出");
     isRuning = false;
