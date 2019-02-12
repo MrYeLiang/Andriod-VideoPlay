@@ -45,3 +45,43 @@ bool FFDecode::Open(XParameter para)
     return true;
 
 }
+
+bool FFDecode::SendPacket(XData pkt)
+{
+    if(pkt.size <= 0 || !pkt.data){
+        return false;
+    }
+
+    if(!codec){
+        return false;
+    }
+
+    int re = avcodec_send_packet(codec, (AVPacket *)pkt.data);
+    if(re != 0){
+        return false;
+    }
+
+    return true;
+}
+
+//从线程中获取解码结果
+XData FFDecode::RecvFrame()
+{
+    if(!codec){
+        return XData();
+    }
+    if(!frame){
+        frame = av_frame_alloc();
+    }
+
+    int re = avcodec_receive_frame(codec,frame);
+    if(re != 0){
+        return XData();
+    }
+    XData d;
+    d.data = (unsigned char *)frame;
+    if(codec->codec_type == AVMEDIA_TYPE_VIDEO){
+        d.size = (frame->linesize[0] + frame->linesize[1] + frame->linesize[2])*frame->height;
+    }
+    return d;
+}

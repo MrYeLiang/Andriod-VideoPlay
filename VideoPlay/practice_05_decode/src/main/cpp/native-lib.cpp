@@ -17,7 +17,7 @@ class TestObs:public IObserver
 public:
     void Update(XData d)
     {
-        XLOGI("TestObs Update data size is %d",d.size);
+        //XLOGI("TestObs Update data size is %d",d.size);
     }
 };
 
@@ -29,7 +29,7 @@ Java_com_example_videoplay_MainActivity_decode(JNIEnv *env, jobject instance) {
     de->Open("");*/
 
     //测试代码
-    TestObs *obs = new TestObs;
+    TestObs *obs = new TestObs();
     IDemux *de = new FFDemux();
     de->AddObs(obs);
     de ->Open("/storage/emulated/0/video.mp4");
@@ -40,9 +40,17 @@ Java_com_example_videoplay_MainActivity_decode(JNIEnv *env, jobject instance) {
     IDecode *vdecode = new FFDecode();
     vdecode->Open(de->GetVPara());
 
+    IDecode *aDecode = new FFDecode();
+    aDecode->Open(de->GetAPara());
+
+
     de->Start();
-    XSleep(3000);
-    de->Stop();
+    aDecode->Start();
+    vdecode->Start();
+
+
+    /*XSleep(3000);
+    de->Stop();*/
 
 }
 
