@@ -5,4 +5,13 @@
 #ifndef VIDEOPLAY_IVIDEOVIEW_H
 #define VIDEOPLAY_IVIDEOVIEW_H
 
+#include "IObserver.h"
+
+class IVideoView: public IObserver
+{
+public:
+    virtual void SetRender(void *win) = 0;
+    virtual void Render(XData data) = 0;
+    virtual void Update(XData data);
+};
 #endif //VIDEOPLAY_IVIDEOVIEW_H

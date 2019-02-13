@@ -21,6 +21,7 @@ public:
             mux.unlock();
             return;
         }
+
         eglSwapBuffers(display,surface);
         mux.unlock();
     }
