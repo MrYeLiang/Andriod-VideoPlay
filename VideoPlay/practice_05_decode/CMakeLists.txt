@@ -34,11 +34,17 @@ add_library(native-lib
             src/main/cpp/XParameter.cpp
             src/main/cpp/IDecode.cpp
             src/main/cpp/FFDecode.cpp
+            src/main/cpp/GLVideoView.cpp
+            src/main/cpp/IVideoView.cpp
+            src/main/cpp/XEGL.cpp
+            src/main/cpp/XShader.cpp
             )
 
 find_library(log-lib
               log )
 target_link_libraries(native-lib
-                      OpenSLES
+                      OpenSLES EGL
+                      GLESv2
+                      android
                       avcodec avformat avutil swscale swresample
                        ${log-lib} )

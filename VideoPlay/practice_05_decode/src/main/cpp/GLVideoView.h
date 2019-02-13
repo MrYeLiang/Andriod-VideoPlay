@@ -1,0 +1,8 @@
+//
+// Created by 叶亮 on 2019/2/12.
+//
+
+#ifndef VIDEOPLAY_GLVIDEOVIEW_H
+#define VIDEOPLAY_GLVIDEOVIEW_H
+
+#endif //VIDEOPLAY_GLVIDEOVIEW_H
