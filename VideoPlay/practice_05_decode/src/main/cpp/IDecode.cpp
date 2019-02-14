@@ -38,7 +38,6 @@ void IDecode::Main()
             XSleep(1);
             continue;
         }
-
         //取出packet 消费者
         XData pack = packs.front();
         packs.pop_front();
@@ -53,7 +52,6 @@ void IDecode::Main()
                 if(!frame.data){
                     break;
                 }
-
                 this->Notify(frame);
             }
         }

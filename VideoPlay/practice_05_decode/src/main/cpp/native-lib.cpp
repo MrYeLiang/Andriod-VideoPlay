@@ -16,6 +16,8 @@
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include "GLVideoView.h"
+#include "IResample.h"
+#include "FFResample.h"
 
 class TestObs:public IObserver
 {
@@ -45,21 +47,26 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     /*int tid = (int)syscall(SYS_gettid);
     XLOGI("主进程id: = %d",tid);*/
 
-    IDecode *vdecode = new FFDecode();
-    vdecode->Open(demux->GetVPara());
+    //IDecode *vdecode = new FFDecode();
+    //vdecode->Open(demux->GetVPara());
 
-    //IDecode *aDecode = new FFDecode();
-    //aDecode->Open(demux->GetAPara());
+    IDecode *aDecode = new FFDecode();
+    aDecode->Open(demux->GetAPara());
 
-    demux->AddObs(vdecode);
-    //demux->AddObs(aDecode);
+
 
     view = new GLVideoView();
-    vdecode->AddObs(view);
+    //vdecode->AddObs(view);
 
+    IResample *resample = new FFResample();
+    resample->Open(demux->GetAPara());
+    aDecode->AddObs(resample);
+
+    demux->AddObs(aDecode);
+    //demux->AddObs(vdecode);
     demux->Start();
-    //aDecode->Start();
-    vdecode->Start();
+    aDecode->Start();
+    //vdecode->Start();
 
     ANativeWindow *win = ANativeWindow_fromSurface(env,surface);
 

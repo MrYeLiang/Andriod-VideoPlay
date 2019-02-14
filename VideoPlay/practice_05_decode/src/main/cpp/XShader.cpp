@@ -155,7 +155,7 @@ void XShader::Draw()
     if(!program){
         return;
     }
-
+    XLOGI("XShader---->Draw");
     //三维绘制
     glDrawArrays(GL_TRIANGLE_STRIP, 0 ,4);
 }
