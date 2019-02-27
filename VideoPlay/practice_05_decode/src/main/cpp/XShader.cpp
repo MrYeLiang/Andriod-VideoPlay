@@ -119,7 +119,6 @@ bool XShader::Init()
     static float vers[] = {
             1.0f,   -1.0f,  0.0f,
             -1.0f,  -1.0f,  0.0f,
-            1.0f,   1.0f,   1.0f,
             1.0f,   1.0f,   0.0f,
             -1.0f,  1.0f,   0.0f,
     };
@@ -143,8 +142,8 @@ bool XShader::Init()
     //材质纹理初始化
     //设置纹理层
     glUniform1i(glGetUniformLocation(program, "yTexture"), 0); //对于纹理第1层
-    glUniform1i(glGetUniformLocation(program, "uTexture"), 0); //对于纹理第2层
-    glUniform1i(glGetUniformLocation(program, "vTexture"), 0); //对于纹理第3层
+    glUniform1i(glGetUniformLocation(program, "uTexture"), 1); //对于纹理第2层
+    glUniform1i(glGetUniformLocation(program, "vTexture"), 2); //对于纹理第3层
 
     XLOGI("初始化Shader成功!");
     return true;
@@ -186,7 +185,7 @@ void XShader::GetTexture(unsigned int index, int width, int height, unsigned cha
     }
 
     //激活第一层纹理 绑定到创建的opengl纹理
-    glActiveTexture(GL_TEXTURE + index);
+    glActiveTexture(GL_TEXTURE0 + index);
     glBindTexture(GL_TEXTURE_2D, texts[index]);
 
     //替换纹理内容
