@@ -48,6 +48,7 @@ find_library(log-lib
 target_link_libraries(native-lib
                       OpenSLES EGL
                       GLESv2
+                      OpenSLES
                       android
                       avcodec avformat avutil swscale swresample
                        ${log-lib} )

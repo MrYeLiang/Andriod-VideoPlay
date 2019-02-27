@@ -27,7 +27,7 @@ public:
         //XLOGI("TestObs Update data size is %d",d.size);
     }
 };
-IVideoView *view = NULL;
+IVideoView *   view = NULL;
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -40,33 +40,36 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject surface) {
 
-    //测试代码
+    //解封装对象
     IDemux *demux = new FFDemux();
     demux ->Open("/storage/emulated/0/video.mp4");
 
     /*int tid = (int)syscall(SYS_gettid);
     XLOGI("主进程id: = %d",tid);*/
 
-    //IDecode *vdecode = new FFDecode();
-    //vdecode->Open(demux->GetVPara());
+    //视频解码器
+    IDecode *vdecode = new FFDecode();
+    vdecode->Open(demux->GetVPara());
 
-    IDecode *aDecode = new FFDecode();
-    aDecode->Open(demux->GetAPara());
+    //音频解码器
+    //IDecode *aDecode = new FFDecode();
+    //aDecode->Open(demux->GetAPara());
 
 
 
     view = new GLVideoView();
-    //vdecode->AddObs(view);
+    vdecode->AddObs(view);
 
+    //音频重采样
     IResample *resample = new FFResample();
     resample->Open(demux->GetAPara());
-    aDecode->AddObs(resample);
+    //aDecode->AddObs(resample);
 
-    demux->AddObs(aDecode);
-    //demux->AddObs(vdecode);
+    //demux->AddObs(aDecode);
+    demux->AddObs(vdecode);
     demux->Start();
-    aDecode->Start();
-    //vdecode->Start();
+    //aDecode->Start();
+    vdecode->Start();
 
     ANativeWindow *win = ANativeWindow_fromSurface(env,surface);
 
