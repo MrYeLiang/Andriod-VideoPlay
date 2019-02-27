@@ -19,14 +19,6 @@
 #include "IResample.h"
 #include "FFResample.h"
 
-class TestObs:public IObserver
-{
-public:
-    void Update(XData d)
-    {
-        //XLOGI("TestObs Update data size is %d",d.size);
-    }
-};
 IVideoView *   view = NULL;
 
 extern "C"
@@ -44,34 +36,28 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     IDemux *demux = new FFDemux();
     demux ->Open("/storage/emulated/0/video.mp4");
 
-    /*int tid = (int)syscall(SYS_gettid);
-    XLOGI("主进程id: = %d",tid);*/
+    //音频解码器
+   /* IDecode *aDecode = new FFDecode();
+    aDecode->Open(demux->GetAPara());
+    IResample *resample = new FFResample(); //音频重采样
+    resample->Open(demux->GetAPara());
+    aDecode->AddObs(resample);
+    demux->AddObs(aDecode);*/
+    //aDecode->Start();
+
+
 
     //视频解码器
     IDecode *vdecode = new FFDecode();
     vdecode->Open(demux->GetVPara());
-
-    //音频解码器
-    //IDecode *aDecode = new FFDecode();
-    //aDecode->Open(demux->GetAPara());
-
-
-
     view = new GLVideoView();
     vdecode->AddObs(view);
-
-    //音频重采样
-    IResample *resample = new FFResample();
-    resample->Open(demux->GetAPara());
-    //aDecode->AddObs(resample);
-
-    //demux->AddObs(aDecode);
     demux->AddObs(vdecode);
-    demux->Start();
-    //aDecode->Start();
     vdecode->Start();
 
-    ANativeWindow *win = ANativeWindow_fromSurface(env,surface);
+    demux->Start();
 
+    //视频显示
+    ANativeWindow *win = ANativeWindow_fromSurface(env,surface);
     view->SetRender(win);
 }
