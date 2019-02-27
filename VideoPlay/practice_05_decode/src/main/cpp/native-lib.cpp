@@ -37,13 +37,13 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     demux ->Open("/storage/emulated/0/video.mp4");
 
     //音频解码器
-   /* IDecode *aDecode = new FFDecode();
+    IDecode *aDecode = new FFDecode();
     aDecode->Open(demux->GetAPara());
     IResample *resample = new FFResample(); //音频重采样
     resample->Open(demux->GetAPara());
     aDecode->AddObs(resample);
-    demux->AddObs(aDecode);*/
-    //aDecode->Start();
+    demux->AddObs(aDecode);
+    aDecode->Start();
 
 
 

@@ -41,6 +41,12 @@ bool FFDecode::Open(XParameter para)
         return false;
     }
 
+    if(codec->codec_type == AVMEDIA_TYPE_VIDEO){
+        this->isAudio = false;
+    }else{
+        this->isAudio = true;
+    }
+
     XLOGI("avcodec_open2 success!");
     return true;
 
