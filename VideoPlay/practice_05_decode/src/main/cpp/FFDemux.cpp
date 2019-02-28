@@ -93,6 +93,18 @@ XData FFDemux::Read()
     d.data = (unsigned char*)pkt;
     d.size = pkt->size;
 
+    if(pkt->stream_index == audioStream)
+    {
+        d.isAudio = true;
+    }else if(pkt->stream_index == videoStream)
+    {
+        d.isAudio = false;
+    } else
+    {
+        av_packet_free(&pkt);
+        return XData();
+    }
+
     return d;
 }
 
