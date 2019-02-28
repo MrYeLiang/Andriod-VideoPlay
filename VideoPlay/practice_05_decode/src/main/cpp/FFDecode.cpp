@@ -31,6 +31,7 @@ bool FFDecode::Open(XParameter para)
     codec = avcodec_alloc_context3(cd);
     avcodec_parameters_to_context(codec, p);
 
+    codec->thread_count = 8;
 
     //3 打开解码器
     int re = avcodec_open2(codec, 0, 0);

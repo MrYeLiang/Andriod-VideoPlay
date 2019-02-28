@@ -61,7 +61,6 @@ XData FFResample::Resample(XData indata)
     outArr[0] = out.data;
     XLOGE("FFResample Resample frame->nb_samples  = %d actx = %d",frame->nb_samples,outArr[0]);
     int len = swr_convert(actx, outArr, frame->nb_samples,(const uint8_t **)frame->data,frame->nb_samples);
-    XLOGE("FFResample Resample 2");
     if(len <= 0)
     {
         out.Drop();
