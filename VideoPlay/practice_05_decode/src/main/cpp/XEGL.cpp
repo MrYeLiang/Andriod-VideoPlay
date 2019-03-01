@@ -17,7 +17,6 @@ public:
         if(display == EGL_NO_DISPLAY || surface == EGL_NO_SURFACE){
             return;
         }
-        XLOGI("egl开始绘制");
         eglSwapBuffers(display, surface);
     }
 
