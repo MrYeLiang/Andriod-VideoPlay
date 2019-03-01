@@ -49,6 +49,7 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
 
     IAudioPlay *audioPlay = new SLAudioPlay();
     audioPlay->StartPlay(outPara);
+    resample->AddObs(audioPlay);
 
     aDecode->Start();
 
