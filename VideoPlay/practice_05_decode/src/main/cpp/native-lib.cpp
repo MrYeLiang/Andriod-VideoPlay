@@ -29,6 +29,13 @@ Java_com_example_videoplay_XPlay_decode(JNIEnv *env, jobject instance) {
 
 }
 
+extern "C"
+JNIEXPORT
+jint JNI_OnLoad(JavaVM *vm, void *res)
+{
+    FFDecode::InitHard(vm);
+    return JNI_VERSION_1_4;
+}
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -41,7 +48,7 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     //音频解码器
     IDecode *aDecode = new FFDecode();
     XParameter outPara = demux->GetAPara();
-    aDecode->Open(outPara);
+    aDecode->Open(outPara,true);
     IResample *resample = new FFResample(); //音频重采样
     resample->Open(demux->GetAPara());
     aDecode->AddObs(resample);

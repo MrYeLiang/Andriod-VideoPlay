@@ -41,6 +41,46 @@ static const char *fragYUV420P = GET_STR(
 
 );
 
+static const char *fragNV12 = GET_STR(
+        precision mediump float;    //精度
+        varying vec2 vTexCoord;     //顶点着色器传递的坐标
+        uniform sampler2D yTexture; //输入的材质(不透明度，单像素)
+        uniform sampler2D uvTexture;
+        void main(){
+            vec3 yuv;
+            vec3 rgb;
+            yuv.r = texture2D(yTexture, vTexCoord).r;
+            yuv.g = texture2D(uvTexture, vTexCoord).r - 0.5;
+            yuv.b = texture2D(uvTexture, vTexCoord).a - 0.5;
+            rgb = mat3(1.0,     1.0,        1.0,
+                       0.0,     -0.39465,   2.03211,
+                       1.13983, -0.58060,   0.0)*yuv;
+            //输出像素颜色
+            gl_FragColor = vec4(rgb, 1.0);
+        }
+
+);
+
+static const char *fragNV21 = GET_STR(
+        precision mediump float;    //精度
+        varying vec2 vTexCoord;     //顶点着色器传递的坐标
+        uniform sampler2D yTexture; //输入的材质(不透明度，单像素)
+        uniform sampler2D uvTexture;
+        void main(){
+            vec3 yuv;
+            vec3 rgb;
+            yuv.r = texture2D(yTexture, vTexCoord).r;
+            yuv.g = texture2D(uvTexture, vTexCoord).a - 0.5;
+            yuv.b = texture2D(uvTexture, vTexCoord).r - 0.5;
+            rgb = mat3(1.0,     1.0,        1.0,
+                       0.0,     -0.39465,   2.03211,
+                       1.13983, -0.58060,   0.0)*yuv;
+            //输出像素颜色
+            gl_FragColor = vec4(rgb, 1.0);
+        }
+
+);
+
 
 static GLuint InitShader(const char *code, GLuint type)
 {
@@ -71,7 +111,7 @@ static GLuint InitShader(const char *code, GLuint type)
 }
 
 
-bool XShader::Init()
+bool XShader::Init(XShaderType type)
 {
     //顶点和片元shader初始化
     //顶点shader初始化
@@ -80,7 +120,26 @@ bool XShader::Init()
         XLOGE("InitShader GL_VERTEX_SHADER failed!");
         return false;
     }
-    XLOGE("InitShader GL_VERTEX_SHADER success!");
+
+    XLOGE("InitShader GL_VERTEX_SHADER success! %d", type);
+
+    //片元yuv420 shader初始化
+    switch (type)
+    {
+        case XSHADER_YUV420P:
+            fsh = InitShader(fragYUV420P, GL_FRAGMENT_SHADER);
+            break;
+        case XSHADER_NV12:
+            fsh = InitShader(fragNV12, GL_FRAGMENT_SHADER);
+            break;
+        case XSHADER_NV21:
+            fsh = InitShader(fragNV21, GL_FRAGMENT_SHADER);
+            break;
+        default:
+            XLOGE("XSHADER format is Error");
+            return false;
+    }
+
 
     //片元yuv420 shader初始化
     fsh = InitShader(fragYUV420P, GL_FRAGMENT_SHADER);
@@ -142,8 +201,21 @@ bool XShader::Init()
     //材质纹理初始化
     //设置纹理层
     glUniform1i(glGetUniformLocation(program, "yTexture"), 0); //对于纹理第1层
-    glUniform1i(glGetUniformLocation(program, "uTexture"), 1); //对于纹理第2层
-    glUniform1i(glGetUniformLocation(program, "vTexture"), 2); //对于纹理第3层
+
+    switch (type)
+    {
+        case XSHADER_YUV420P:
+            glUniform1i(glGetUniformLocation(program, "uTexture"), 1); //对于纹理第2层
+            glUniform1i(glGetUniformLocation(program, "vTexture"), 2); //对于纹理第3层
+            break;
+        case XSHADER_NV12:
+        case XSHADER_NV21:
+            glUniform1i(glGetUniformLocation(program, "uvTexture"), 1); //对于纹理第2层
+            break;
+    }
+
+
+
 
     XLOGI("初始化Shader成功!");
     return true;

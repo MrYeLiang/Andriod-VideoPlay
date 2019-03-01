@@ -10,8 +10,10 @@ class CXTexture:public XTexture
 {
 public:
     XShader sh;
-    virtual bool Init(void *win)
+    XTextureType type;
+    virtual bool Init(void *win, XTextureType type)
     {
+        this->type = type;
         if(!win){
             XLOGE("XTexture Init failed win is NULL");;
             return false;
@@ -20,7 +22,7 @@ public:
         if(!XEGL::Get()->Init(win)){
             return false;
         }
-        sh.Init();
+        sh.Init((XShaderType)type);
         return true;
     }
 
