@@ -26,26 +26,20 @@ void XThread::Start()
 void XThread::ThreadMain()
 {
     isRuning = true;
-    XLOGI("线程函数进入");
 
     int tid = (int)syscall(SYS_gettid);
-    XLOGI("current processid = %d",tid);
 
     Main();
-    XLOGI("线程函数退出");
     isRuning = false;
 }
 
 void XThread::Stop()
 {
-    XLOGI("Stop 停止线程begin!");
     isExit = true;
     for(int i = 0; i <200; i++){
         if(!isRuning){
-            XLOGI("Stop 停止线程成功！");
             return;
         }
         XSleep(1);
     }
-    XLOGI("Stop 停止线程超时");
 }
