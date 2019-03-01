@@ -110,7 +110,7 @@ bool SLAudioPlay::StartPlay(XParameter out)
 
     (*player)->Realize(player, SL_BOOLEAN_FALSE);
     //获取player接口
-    re = (*player)->GetInterface(player, SL_IID_PLAY, &player);
+    re = (*player)->GetInterface(player, SL_IID_PLAY, &iplayer);
     if(re != SL_RESULT_SUCCESS)
     {
         XLOGE("GetInterface SL_IID_PLAY failed！");
@@ -131,7 +131,5 @@ bool SLAudioPlay::StartPlay(XParameter out)
     //启动队列回调
     (*pcmQue)->Enqueue(pcmQue, "", 1);
     XLOGI("SLAudioPlay::StartPlay success");
-
-
-
+    return true;
 }
