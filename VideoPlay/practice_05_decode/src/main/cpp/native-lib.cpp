@@ -18,6 +18,8 @@
 #include "GLVideoView.h"
 #include "IResample.h"
 #include "FFResample.h"
+#include "IAudioPlay.h"
+#include "SLAudioPlay.h"
 
 IVideoView *   view = NULL;
 
@@ -38,11 +40,16 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
 
     //音频解码器
     IDecode *aDecode = new FFDecode();
-    aDecode->Open(demux->GetAPara());
+    XParameter outPara = demux->GetAPara();
+    aDecode->Open(outPara);
     IResample *resample = new FFResample(); //音频重采样
     resample->Open(demux->GetAPara());
     aDecode->AddObs(resample);
     demux->AddObs(aDecode);
+
+    IAudioPlay *audioPlay = new SLAudioPlay();
+    audioPlay->StartPlay(outPara);
+
     aDecode->Start();
 
 

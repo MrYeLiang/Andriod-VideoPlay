@@ -41,6 +41,8 @@ add_library(native-lib
             src/main/cpp/XTexture.cpp
             src/main/cpp/IResample.cpp
             src/main/cpp/FFResample.cpp
+            src/main/cpp/IAudioPlay.cpp
+            src/main/cpp/SLAudioPlay.cpp
             )
 
 find_library(log-lib
