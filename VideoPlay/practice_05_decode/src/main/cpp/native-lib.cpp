@@ -49,14 +49,11 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     IAudioPlay *audioPlay = new SLAudioPlay();
     resample->AddObs(audioPlay);
 
-    aDecode->Start();
-
     //视频解码器
     IDecode *vdecode = new FFDecode();
     view = new GLVideoView();
     vdecode->AddObs(view);
     demux->AddObs(vdecode);
-    vdecode->Start();
 
     IPlayer::Get()->demux = demux;
     IPlayer::Get()->adecode = aDecode;
@@ -66,8 +63,9 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     IPlayer::Get()->audioPlay = audioPlay;
 
     IPlayer::Get()->Open("/storage/emulated/0/video.mp4");
+    IPlayer::Get()->Start();
 
     //视频显示
     ANativeWindow *win = ANativeWindow_fromSurface(env,surface);
-    view->SetRender(win);
+    IPlayer::Get()->InitView(win);
 }

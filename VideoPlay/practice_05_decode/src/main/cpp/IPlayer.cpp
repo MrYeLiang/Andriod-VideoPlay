@@ -4,6 +4,7 @@
 
 #include "IPlayer.h"
 #include "Xlog.h"
+#include "IPlayer.h"
 
 IPlayer *IPlayer::Get(unsigned char index)
 {
@@ -35,5 +36,31 @@ bool IPlayer::Open(const char *path)
 
 bool IPlayer::Start()
 {
+    if(!demux || !demux->Start())
+    {
+        XLOGE("demux->Start failed!");
+        return false;
+    }
+
+    if(adecode)
+    {
+        adecode->Start();
+    }
+
+    if(audioPlay){
+        audioPlay->StartPlay(outPara);
+    }
+
+    if(vdecode){
+        vdecode->Start();
+    }
     return true;
+}
+
+void IPlayer::InitView(void *win)
+{
+    if(videoView)
+    {
+        videoView->SetRender(win);
+    }
 }

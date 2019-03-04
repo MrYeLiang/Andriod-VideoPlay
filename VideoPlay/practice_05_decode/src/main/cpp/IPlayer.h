@@ -18,9 +18,13 @@ public:
     static IPlayer *Get(unsigned char index = 0);
     virtual bool Open(const char *path);
     virtual bool Start();
+    virtual void InitView(void *win);
 
     //是否视频硬解码
     bool isHardDecode = true;
+
+    //音频输出参数配置
+    XParameter outPara;
 
     IDemux *demux = 0;
     IDecode *vdecode = 0;
