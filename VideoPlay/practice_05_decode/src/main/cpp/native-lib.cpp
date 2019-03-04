@@ -15,6 +15,7 @@
 #include "FFResample.h"
 #include "IAudioPlay.h"
 #include "SLAudioPlay.h"
+#include "IPlayer.h"
 
 IVideoView *   view = NULL;
 
@@ -38,32 +39,33 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
 
     //解封装对象
     IDemux *demux = new FFDemux();
-    demux ->Open("/storage/emulated/0/video.mp4");
 
     //音频解码器
     IDecode *aDecode = new FFDecode();
-    XParameter outPara = demux->GetAPara();
-    aDecode->Open(outPara);
     IResample *resample = new FFResample(); //音频重采样
-    resample->Open(demux->GetAPara());
     aDecode->AddObs(resample);
     demux->AddObs(aDecode);
 
     IAudioPlay *audioPlay = new SLAudioPlay();
-    audioPlay->StartPlay(outPara);
     resample->AddObs(audioPlay);
 
     aDecode->Start();
 
     //视频解码器
     IDecode *vdecode = new FFDecode();
-    vdecode->Open(demux->GetVPara(),true);
     view = new GLVideoView();
     vdecode->AddObs(view);
     demux->AddObs(vdecode);
     vdecode->Start();
 
-    demux->Start();
+    IPlayer::Get()->demux = demux;
+    IPlayer::Get()->adecode = aDecode;
+    IPlayer::Get()->vdecode = vdecode;
+    IPlayer::Get()->videoView = view;
+    IPlayer::Get()->resample = resample;
+    IPlayer::Get()->audioPlay = audioPlay;
+
+    IPlayer::Get()->Open("/storage/emulated/0/video.mp4");
 
     //视频显示
     ANativeWindow *win = ANativeWindow_fromSurface(env,surface);
