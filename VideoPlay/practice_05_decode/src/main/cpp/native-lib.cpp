@@ -4,15 +4,10 @@
 
 #include <jni.h>
 #include "FFDemux.h"
-#include "Xlog.h"
 #include "IObserver.h"
-#include "XData.h"
 #include "IDecode.h"
 #include "FFDecode.h"
-#include "XEGL.h"
-#include "XShader.h"
 #include <unistd.h>
-#include <sys/syscall.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include "GLVideoView.h"
@@ -59,8 +54,6 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     resample->AddObs(audioPlay);
 
     aDecode->Start();
-
-
 
     //视频解码器
     IDecode *vdecode = new FFDecode();
