@@ -8,37 +8,37 @@
 #include "GLVideoView.h"
 #include "SLAudioPlay.h"
 
-IDemux *CreateDemux()
+IDemux * FFPlayerBuilder::CreateDemux()
 {
     IDemux *ffdemux = new FFDemux();
     return ffdemux;
 };
 
-IDecode *CreateDecode()
+IDecode * FFPlayerBuilder::CreateDecode()
 {
     IDecode *ffdecode = new FFDecode();
     return ffdecode;
 };
 
-IResample *CreateResample()
+IResample * FFPlayerBuilder::CreateResample()
 {
     IResample *ffresample = new FFResample();
     return ffresample;
 };
 
-IVideoView *CreateVideoView()
+IVideoView * FFPlayerBuilder::CreateVideoView()
 {
     IVideoView *glVideoView = new GLVideoView();
     return glVideoView;
 };
 
-IAudioPlay *CreateAudioPlay()
+IAudioPlay * FFPlayerBuilder::CreateAudioPlay()
 {
     IAudioPlay *slAudioPlay = new SLAudioPlay();
     return slAudioPlay;
 };
 
-IPlayer *CreatePlayer(unsigned char index = 0)
+IPlayer *FFPlayerBuilder::CreatePlayer(unsigned char index)
 {
     return IPlayer::Get(index);
 };
