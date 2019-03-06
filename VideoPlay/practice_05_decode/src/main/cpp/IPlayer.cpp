@@ -31,6 +31,14 @@ bool IPlayer::Open(const char *path)
         XLOGE("adecode->Open %s failed!", path);
     }
 
+    //重采样，有可能不需要  解码或者解封装后可能是直接能播放的数据
+    if(outPara.sample_rate <= 0) outPara = demux->GetAPara();
+
+    if(!resample || !resample->Open(demux->GetAPara(),outPara))
+    {
+        XLOGE("resample->Open %s failed!",path);
+    }
+
     return true;
 }
 
