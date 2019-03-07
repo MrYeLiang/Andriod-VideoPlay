@@ -12,6 +12,7 @@
 #include "SLAudioPlay.h"
 #include "IPlayer.h"
 #include "FFPlayerBuilder.h"
+#include "IPlayerProxy.h"
 
 static IPlayer *player = NULL;
 
@@ -21,9 +22,13 @@ jint JNI_OnLoad(JavaVM *vm, void *res)
 {
     FFPlayerBuilder::InitHard(vm);
 
-    player = FFPlayerBuilder::Get()->BuilderPlayer();
+   /* player = FFPlayerBuilder::Get()->BuilderPlayer();
     player->Open("/storage/emulated/0/video.mp4");
-    player->Start();
+    player->Start();*/
+
+    IPlayerProxy::Get()->Init(vm);
+    IPlayerProxy::Get()->Open("/storage/emulated/0/video.mp4");
+    IPlayerProxy::Get()->Start();
 
     return JNI_VERSION_1_4;
 }

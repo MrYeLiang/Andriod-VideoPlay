@@ -46,6 +46,7 @@ add_library(native-lib
             src/main/cpp/IPlayer.cpp
             src/main/cpp/IPlayerBuilder.cpp
             src/main/cpp/FFPlayerBuilder.cpp
+            src/main/cpp/IPlayerProxy.cpp
             )
 
 find_library(log-lib
