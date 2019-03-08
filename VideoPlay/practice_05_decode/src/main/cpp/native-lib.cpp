@@ -14,7 +14,6 @@
 #include "FFPlayerBuilder.h"
 #include "IPlayerProxy.h"
 
-static IPlayer *player = NULL;
 
 extern "C"
 JNIEXPORT
@@ -22,13 +21,10 @@ jint JNI_OnLoad(JavaVM *vm, void *res)
 {
     FFPlayerBuilder::InitHard(vm);
 
-   /* player = FFPlayerBuilder::Get()->BuilderPlayer();
-    player->Open("/storage/emulated/0/video.mp4");
-    player->Start();*/
-
     IPlayerProxy::Get()->Init(vm);
     IPlayerProxy::Get()->Open("/storage/emulated/0/video.mp4");
     IPlayerProxy::Get()->Start();
+
 
     return JNI_VERSION_1_4;
 }
