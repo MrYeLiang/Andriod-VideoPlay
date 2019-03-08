@@ -33,6 +33,5 @@ public class XPlay extends GLSurfaceView implements SurfaceHolder.Callback{
 
     }
 
-    public native void decode();
     public native void InitView(Object surface);
 }

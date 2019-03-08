@@ -27,9 +27,6 @@ bool XThread::Start()
 void XThread::ThreadMain()
 {
     isRuning = true;
-
-    int tid = (int)syscall(SYS_gettid);
-
     Main();
     isRuning = false;
 }
