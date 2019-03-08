@@ -6,6 +6,17 @@
 #include "Xlog.h"
 #include "IAudioPlay.h"
 
+void IAudioPlay::Clear()
+{
+    framesMutex.lock();
+    while (!frames.empty())
+    {
+        frames.front().Drop();
+        frames.pop_front();
+    }
+    framesMutex.unlock();
+}
+
 XData IAudioPlay::GetData()
 {
     XData d;

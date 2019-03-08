@@ -13,5 +13,6 @@ public:
     virtual void SetRender(void *win) = 0;
     virtual void Render(XData data) = 0;
     virtual void Update(XData data);
+    virtual void Close() = 0;
 };
 #endif //VIDEOPLAY_IVIDEOVIEW_H

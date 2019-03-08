@@ -112,6 +112,7 @@ XData FFDemux::Read()
 {
     mux.lock();
     if(!ic){
+        mux.unlock();
         return XData();
     }
     XData d;

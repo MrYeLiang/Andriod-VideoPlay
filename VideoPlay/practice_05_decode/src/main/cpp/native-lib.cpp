@@ -25,6 +25,9 @@ jint JNI_OnLoad(JavaVM *vm, void *res)
     IPlayerProxy::Get()->Open("/storage/emulated/0/video.mp4");
     IPlayerProxy::Get()->Start();
 
+    IPlayerProxy::Get()->Open("/storage/emulated/0/video.mp4");
+    IPlayerProxy::Get()->Start();
+
 
     return JNI_VERSION_1_4;
 }
