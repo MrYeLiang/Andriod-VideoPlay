@@ -144,7 +144,7 @@ XData FFDemux::Read()
 
     d.pts = (int)pkt->pts;
 
-    XLOGE("demux pts =  %d", d.pts);
+    //XLOGE("demux pts =  %d", d.pts);
     mux.unlock();
     return d;
 }
