@@ -14,9 +14,10 @@ class GLVideoView:public IVideoView{
 public:
     virtual void SetRender(void *win);
     virtual void Render(XData data);
-
+    virtual void Close();
 protected:
     void *view = 0;
     XTexture *txt = 0;
+    std::mutex mux;
 };
 #endif //VIDEOPLAY_GLVIDEOVIEW_H
