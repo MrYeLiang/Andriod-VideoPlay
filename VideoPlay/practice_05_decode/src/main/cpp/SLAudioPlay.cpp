@@ -112,7 +112,6 @@ void SLAudioPlay::Close()
 
 bool SLAudioPlay::StartPlay(XParameter out)
 {
-    Close();
     mux.lock();
     //1 创建引擎
     eng = CreateSL();
