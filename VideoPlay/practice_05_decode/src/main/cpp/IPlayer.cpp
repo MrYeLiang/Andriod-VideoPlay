@@ -5,11 +5,34 @@
 #include "IPlayer.h"
 #include "Xlog.h"
 #include "IPlayer.h"
+#include "IAudioPlay.h"
 
 IPlayer *IPlayer::Get(unsigned char index)
 {
     static IPlayer p[256];
     return &p[index];
+}
+
+void IPlayer::Main()
+{
+    while (!isExit)
+    {
+        mux.lock();
+        if(!audioPlay || !vdecode)
+        {
+            mux.unlock();
+            XSleep(2);
+            continue;
+        }
+
+        //同步
+        //获取音频的pts 告诉音频
+        int apts = audioPlay->pts;
+        vdecode->synPts = apts;
+
+        mux.unlock();
+        XSleep(2);
+    }
 }
 
 void IPlayer::Close()

@@ -143,6 +143,8 @@ XData FFDecode::RecvFrame()
     }
     d.format = frame->format;
     memcpy(d.datas, frame->data, sizeof(d.datas));
+    d.pts = frame->pts;
+    pts = d.pts;
     mux.unlock();
     return d;
 }
