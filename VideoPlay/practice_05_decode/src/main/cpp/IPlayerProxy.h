@@ -21,6 +21,7 @@ public:
     virtual bool Start();
     virtual void InitView(void *win);
     virtual void Close();
+    virtual bool Seek(double pos);
 
     //获取当前播放的进度
     virtual double PlayPos();

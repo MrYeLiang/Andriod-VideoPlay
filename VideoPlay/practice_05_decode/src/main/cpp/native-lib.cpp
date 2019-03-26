@@ -46,3 +46,9 @@ Java_com_example_videoplay_MainActivity_getPlayPos(JNIEnv *env, jobject instance
     XLOGI("native--> pos = %lf",pos);
     return pos;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_videoplay_MainActivity_seekTo(JNIEnv *env, jobject instance, jdouble pos) {
+    IPlayerProxy::Get()->Seek(pos);
+}

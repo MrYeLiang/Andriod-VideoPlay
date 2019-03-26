@@ -10,7 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     static {
         System.loadLibrary("native-lib");
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mSeekBar = findViewById(R.id.seek_progress);
+        mSeekBar.setOnSeekBarChangeListener(this);
     }
 
 
@@ -71,6 +72,25 @@ public class MainActivity extends AppCompatActivity {
         mThread.start();
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        double pos = (double) seekBar.getProgress() / (double) seekBar.getMax();
+        Log.i("===TAG===", "Seek pos = " + pos);
+        seekTo(pos);
+    }
+
+
     public native double getPlayPos();
 
+    public native double seekTo(double pos);
 }

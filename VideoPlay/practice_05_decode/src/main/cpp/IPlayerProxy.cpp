@@ -75,3 +75,15 @@ double IPlayerProxy::PlayPos()
     mux.unlock();
     return pos;
 }
+
+bool IPlayerProxy::Seek(double pos)
+{
+    bool re = false;
+    mux.lock();
+    if(player)
+    {
+        re = player->Seek(pos);
+    }
+    mux.unlock();
+    return re;
+}

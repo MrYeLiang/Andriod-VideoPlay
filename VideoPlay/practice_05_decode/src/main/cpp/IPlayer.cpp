@@ -167,3 +167,15 @@ double  IPlayer::PlayPos(){
     //XLOGI("IPlayer--> pos = %lf",pos);
     return pos;
 }
+
+bool IPlayer::Seek(double pos)
+{
+    bool re = false;
+    mux.lock();
+    if(demux)
+    {
+        re = demux->Seek(pos);
+    }
+    mux.unlock();
+    return re;
+}
