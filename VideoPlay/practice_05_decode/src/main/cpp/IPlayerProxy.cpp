@@ -3,6 +3,7 @@
 //
 #include "IPlayerProxy.h"
 #include "FFPlayerBuilder.h"
+#include "Xlog.h"
 
 
 void IPlayerProxy::Close()
@@ -33,6 +34,7 @@ bool IPlayerProxy::Open(const char *path)
     mux.lock();
     if(player)
     {
+        player->isHardDecode = isHardDecode;
         re = player->Open(path);
     }
     mux.unlock();
@@ -59,4 +61,17 @@ void IPlayerProxy::InitView(void *win)
         player->InitView(win);
     }
     mux.unlock();
+}
+
+double IPlayerProxy::PlayPos()
+{
+    double pos = 0.0;
+    mux.lock();
+    if(player)
+    {
+       pos = player->PlayPos();
+        //XLOGI("IPlayerProxy--> pos = %lf",pos);
+    }
+    mux.unlock();
+    return pos;
 }

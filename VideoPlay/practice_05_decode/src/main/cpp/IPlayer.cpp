@@ -143,3 +143,27 @@ void IPlayer::InitView(void *win)
         videoView->SetRender(win);
     }
 }
+
+//获取当前的播放进度
+double  IPlayer::PlayPos(){
+    double pos = 0.0;
+    mux.lock();
+    int total = 0;
+    if(demux)
+    {
+        total = demux->totalMs;
+    }
+
+    if(total > 0)
+    {
+        if(vdecode)
+        {
+            pos = (double)vdecode->pts/(double)total;
+        }
+    }
+
+    mux.unlock();
+
+    //XLOGI("IPlayer--> pos = %lf",pos);
+    return pos;
+}

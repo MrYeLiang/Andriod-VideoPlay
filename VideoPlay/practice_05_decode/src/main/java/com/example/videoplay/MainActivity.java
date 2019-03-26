@@ -4,15 +4,21 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
 
     static {
         System.loadLibrary("native-lib");
     }
+
+    private SeekBar mSeekBar;
+    private Thread mThread;
+    private Runnable mRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
 
+        initView();
+        initData();
+    }
+
+    private void initView() {
         findViewById(R.id.btn_open).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,6 +46,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mSeekBar = findViewById(R.id.seek_progress);
     }
+
+
+    private void initData() {
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    int progress = (int) (getPlayPos() * 100);
+
+                    //Log.i("===TAG===", "progress = " + progress * 100);
+                    mSeekBar.setProgress(progress);
+                    try {
+                        Thread.currentThread().sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        mThread = new Thread(mRunnable);
+        mThread.start();
+    }
+
+    public native double getPlayPos();
 
 }

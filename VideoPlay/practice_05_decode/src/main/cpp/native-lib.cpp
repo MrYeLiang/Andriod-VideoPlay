@@ -7,6 +7,7 @@
 #include <android/native_window_jni.h>
 #include "FFPlayerBuilder.h"
 #include "IPlayerProxy.h"
+#include "Xlog.h"
 
 
 extern "C"
@@ -36,4 +37,12 @@ Java_com_example_videoplay_PlayListActivity_OpenUrl(JNIEnv *env, jobject instanc
     IPlayerProxy::Get()->Start();
 
     env->ReleaseStringUTFChars(url_, url);
+}
+
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_example_videoplay_MainActivity_getPlayPos(JNIEnv *env, jobject instance) {
+    jdouble pos = IPlayerProxy::Get()->PlayPos();
+    XLOGI("native--> pos = %lf",pos);
+    return pos;
 }
