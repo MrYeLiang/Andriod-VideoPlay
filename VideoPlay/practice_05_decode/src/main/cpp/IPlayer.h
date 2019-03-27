@@ -24,6 +24,7 @@ public:
     //获取当前的播放进度
     virtual double  PlayPos();
     virtual bool Seek(double pos);
+    virtual void SetPause(bool isP);
 
 
     //是否视频硬解码

@@ -52,6 +52,8 @@ void IPlayer::Close()
         vdecode->Stop();
     if(adecode)
         adecode->Stop();
+    if(vdecode)
+        vdecode->Stop();
 
     //2 清理缓冲队列
     if(vdecode)
@@ -166,6 +168,22 @@ double  IPlayer::PlayPos(){
 
     //XLOGI("IPlayer--> pos = %lf",pos);
     return pos;
+}
+
+void IPlayer::SetPause(bool isP)
+{
+    mux.lock();
+    XThread::SetPause(isP);
+    if(demux)
+        demux->SetPause(isP);
+    if(vdecode)
+        vdecode->SetPause(isP);
+    if(adecode)
+        adecode->SetPause(isP);
+    if(audioPlay)
+        audioPlay->SetPause(isP);
+
+    mux.unlock();
 }
 
 bool IPlayer::Seek(double pos)

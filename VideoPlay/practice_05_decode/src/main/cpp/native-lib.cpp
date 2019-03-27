@@ -19,7 +19,7 @@ jint JNI_OnLoad(JavaVM *vm, void *res) {
 
     return JNI_VERSION_1_4;
 }
-
+//===================   初始化View   ===================
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject surface) {
@@ -28,6 +28,7 @@ Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject
     IPlayerProxy::Get()->InitView(win);
 }
 
+//===================   打开播放地址   ===================
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_videoplay_PlayListActivity_OpenUrl(JNIEnv *env, jobject instance, jstring url_) {
@@ -39,16 +40,26 @@ Java_com_example_videoplay_PlayListActivity_OpenUrl(JNIEnv *env, jobject instanc
     env->ReleaseStringUTFChars(url_, url);
 }
 
+//===================   获取当前播放位置   ===================
+
 extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_example_videoplay_MainActivity_getPlayPos(JNIEnv *env, jobject instance) {
     jdouble pos = IPlayerProxy::Get()->PlayPos();
-    XLOGI("native--> pos = %lf",pos);
+    XLOGI("native--> pos = %lf", pos);
     return pos;
 }
 
+//===================         滑动       ===================
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_videoplay_MainActivity_seekTo(JNIEnv *env, jobject instance, jdouble pos) {
     IPlayerProxy::Get()->Seek(pos);
+}
+
+//=========================    暂停  =========================
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_videoplay_XPlay_playOnPause(JNIEnv *env, jobject instance) {
+    IPlayerProxy::Get()->SetPause(!IPlayerProxy::Get()->IsPause());
 }

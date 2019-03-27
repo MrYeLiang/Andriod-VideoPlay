@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 /**
  * Author: yeliang(yeliang@tv365.net)
@@ -12,10 +13,11 @@ import android.view.SurfaceHolder;
  * Description:
  */
 
-public class XPlay extends GLSurfaceView implements SurfaceHolder.Callback{
+public class XPlay extends GLSurfaceView implements SurfaceHolder.Callback,View.OnClickListener{
 
     public XPlay(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setOnClickListener(this);
     }
 
     @Override
@@ -34,4 +36,11 @@ public class XPlay extends GLSurfaceView implements SurfaceHolder.Callback{
     }
 
     public native void InitView(Object surface);
+
+    public native void playOnPause();
+
+    @Override
+    public void onClick(View v) {
+        playOnPause();
+    }
 }

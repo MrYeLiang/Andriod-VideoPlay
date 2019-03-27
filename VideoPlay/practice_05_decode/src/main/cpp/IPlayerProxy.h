@@ -23,6 +23,9 @@ public:
     virtual void Close();
     virtual bool Seek(double pos);
 
+    virtual void SetPause(bool isP);
+    virtual bool IsPause();
+
     //获取当前播放的进度
     virtual double PlayPos();
 
