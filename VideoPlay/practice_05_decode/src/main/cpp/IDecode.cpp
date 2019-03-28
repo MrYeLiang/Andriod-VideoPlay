@@ -30,7 +30,6 @@ void IDecode::Update(XData pkt)
 
 void IDecode::Clear()
 {
-    packsMutex.lock();
     while (!packs.empty())
     {
         packs.front().Drop();
@@ -38,7 +37,6 @@ void IDecode::Clear()
     }
     pts = 0;
     synPts = 0;
-    packsMutex.unlock();
 }
 
 void IDecode::Main()
