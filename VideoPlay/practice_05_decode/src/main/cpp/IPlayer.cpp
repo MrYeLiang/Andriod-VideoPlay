@@ -188,12 +188,57 @@ void IPlayer::SetPause(bool isP)
 
 bool IPlayer::Seek(double pos)
 {
-    bool re = false;
+    bool re;
+    if(!demux) return false;
+    //暂停所有线程
+    SetPause(true);
     mux.lock();
-    if(demux)
+    //清理缓冲
+    //2 清理缓冲队列
+    if(vdecode)
+        vdecode->Clear();//清理缓冲队列，清理ffmepg的缓冲
+    if(adecode)
+        adecode->Clear();
+    if(audioPlay)
+        audioPlay->Clear();
+
+    re = demux->Seek(pos);//seek跳转到关键帧
+    if(!vdecode){
+        mux.unlock();
+        SetPause(false);
+        return re;
+    }
+    //解码到实际需要显示的帧
+    int seekPts = pos*demux->totalMs;
+    while (!isExit)
     {
-        re = demux->Seek(pos);
+        XData pkt = demux->Read();
+        if(pkt.size <= 0) break;
+        if(pkt.isAudio){
+            if(pkt.pts < seekPts){
+                pkt.Drop();
+                continue;
+            }
+
+            //写入缓冲队列
+            demux->Notify(pkt);
+            continue;
+        }
+        //解码需要显示的帧之前的数据
+        vdecode->SendPacket(pkt);
+        pkt.Drop();
+        XData data = vdecode->RecvFrame();
+        if(data.size <= 0)
+        {
+            continue;
+        }
+        if(data.pts >= seekPts)
+        {
+            break;
+        }
     }
     mux.unlock();
+
+    SetPause(false);
     return re;
 }
