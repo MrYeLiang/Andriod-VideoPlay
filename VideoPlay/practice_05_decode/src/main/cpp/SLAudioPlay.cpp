@@ -89,12 +89,13 @@ void SLAudioPlay::Close()
     {
         (*pcmQue)->Clear(pcmQue);
     }
-
+    XLOGE("SLAudioPlay::Close 1");
     //销毁player对象
     if(player && (*player))
     {
         (*player)->Destroy(player);
     }
+    XLOGE("SLAudioPlay::Close 2");
 
     //销毁混音器
     if(mix && (*mix))
