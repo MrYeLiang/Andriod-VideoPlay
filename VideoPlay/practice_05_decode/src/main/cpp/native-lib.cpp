@@ -46,7 +46,6 @@ extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_example_videoplay_MainActivity_getPlayPos(JNIEnv *env, jobject instance) {
     jdouble pos = IPlayerProxy::Get()->PlayPos();
-    XLOGI("native--> pos = %lf", pos);
     return pos;
 }
 
