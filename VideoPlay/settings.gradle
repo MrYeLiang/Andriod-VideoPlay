@@ -1,1 +1,1 @@
-include ':test_01', ':practice_01', ':practice_02', ':practice_03_opensl', ':practice_04_opengl', ':practice_05_decode'
+include ':practice_02', ':practice_03_opensl', ':practice_04_opengl', ':practice_05_decode'
