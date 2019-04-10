@@ -205,8 +205,8 @@ Java_com_practice_1opengl_PlayView_open(JNIEnv *env, jobject instance, jstring u
     glVertexAttribPointer(atex, 2, GL_FLOAT,GL_FALSE, 8, txts);
 
 
-    int width = 424;
-    int height = 240;
+    int width = 1920;
+    int height = 1080;
 
     //材质纹理初始化
     //设置纹理层
@@ -295,13 +295,13 @@ Java_com_practice_1opengl_PlayView_open(JNIEnv *env, jobject instance, jstring u
 
         //激活第2层纹理， 绑定到创建的opengl纹理
         glActiveTexture(GL_TEXTURE0+1);
-        glBindTexture(GL_TEXTURE_2D, texts[0]);
+        glBindTexture(GL_TEXTURE_2D, texts[1]);
         //替换纹理内容
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width/2, height/2, GL_LUMINANCE, GL_UNSIGNED_BYTE, buf[1]);
 
         //激活第3层纹理， 绑定到创建的opengl纹理
         glActiveTexture(GL_TEXTURE0+2);
-        glBindTexture(GL_TEXTURE_2D, texts[0]);
+        glBindTexture(GL_TEXTURE_2D, texts[2]);
         //替换纹理内容
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width/2, height/2, GL_LUMINANCE, GL_UNSIGNED_BYTE, buf[2]);
 
