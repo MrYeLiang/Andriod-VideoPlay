@@ -11,11 +11,11 @@
         android:layout_height="match_parent" />
 
     <Button
-        android:id="@+id/btn_open"
+        android:id="@+id/btn_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="OPEN" />
+        android:text="播放" />
 
     <SeekBar
         android:id="@+id/seek_progress"
@@ -23,5 +23,5 @@
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="8dp"
-        android:layout_toRightOf="@id/btn_open" />
+        android:layout_toRightOf="@id/btn_play" />
 </RelativeLayout>
