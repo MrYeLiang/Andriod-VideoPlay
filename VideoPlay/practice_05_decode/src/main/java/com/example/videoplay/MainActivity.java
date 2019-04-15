@@ -10,7 +10,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 
-public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener ,EasyPermissions.PermissionCallbacks{
 
     static {
         System.loadLibrary("native-lib");
@@ -36,15 +38,13 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
         initView();
         initData();
+
+       EasyPermissions.permissionsCamera(this ,EasyPermissions.PERMISSION_REQUEST, EasyPermissions.MUST_PERMISSIONS);
+
     }
 
     private void initView() {
-        findViewById(R.id.btn_open).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, PlayListActivity.class));
-            }
-        });
+        findViewById(R.id.btn_play).setOnClickListener(this);
 
         mSeekBar = findViewById(R.id.seek_progress);
         mSeekBar.setOnSeekBarChangeListener(this);
@@ -89,8 +89,38 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         seekTo(pos);
     }
 
-
+    //获取播放位置
     public native double getPlayPos();
 
+    //滑动到
     public native double seekTo(double pos);
+
+    //播放
+    public native void play(String url);
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_play:
+                play("/storage/emulated/0/video.mp4");
+                break;
+        }
+    }
+
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        EasyPermissions.requestPermissions(this, EasyPermissions.PERMISSION_REQUEST, perms.toArray(new String[perms.size()]));
+    }
+
+    @Override
+    public void onPermissionsAllGranted() {
+
+    }
 }
