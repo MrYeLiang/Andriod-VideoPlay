@@ -62,3 +62,16 @@ JNIEXPORT void JNICALL
 Java_com_example_videoplay_XPlay_playOnPause(JNIEnv *env, jobject instance) {
     IPlayerProxy::Get()->SetPause(!IPlayerProxy::Get()->IsPause());
 }
+
+//=========================    视频采集封装  =========================
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_videoplay_MainActivity_play(JNIEnv *env, jobject instance, jstring url_) {
+    const char *url = env->GetStringUTFChars(url_, 0);
+
+    IPlayerProxy::Get()->Open(url);
+    IPlayerProxy::Get()->Start();
+
+    env->ReleaseStringUTFChars(url_, url);
+}
