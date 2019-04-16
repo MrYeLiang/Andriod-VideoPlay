@@ -22,7 +22,7 @@ jint JNI_OnLoad(JavaVM *vm, void *res) {
 //===================   初始化View   ===================
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_videoplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject surface) {
+Java_com_example_videoplay_XPlayView_InitView(JNIEnv *env, jobject instance, jobject surface) {
     //视频显示
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
     IPlayerProxy::Get()->InitView(win);
@@ -59,7 +59,7 @@ Java_com_example_videoplay_MainActivity_seekTo(JNIEnv *env, jobject instance, jd
 //=========================    暂停  =========================
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_videoplay_XPlay_playOnPause(JNIEnv *env, jobject instance) {
+Java_com_example_videoplay_XPlayView_playOnPause(JNIEnv *env, jobject instance) {
     IPlayerProxy::Get()->SetPause(!IPlayerProxy::Get()->IsPause());
 }
 
