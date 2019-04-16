@@ -129,6 +129,7 @@ XParameter FFDemux::GetVPara()
         XLOGE("av_find_best_stream failed!");
         return XParameter();
     }
+    videoStream = re;
     XParameter para;
     para.para = ic->streams[re]->codecpar;
     mux.unlock();
