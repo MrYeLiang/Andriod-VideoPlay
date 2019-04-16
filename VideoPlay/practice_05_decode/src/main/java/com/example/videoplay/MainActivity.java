@@ -1,18 +1,19 @@
 package com.example.videoplay;
 
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.support.v7.app.AppCompatActivity;
+import android.Manifest;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.PermissionChecker;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener ,EasyPermissions.PermissionCallbacks{
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     static {
         System.loadLibrary("native-lib");
@@ -32,14 +33,12 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         );
-        //屏幕为横屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
 
         initView();
         initData();
+        initPermission();
 
-       EasyPermissions.permissionsCamera(this ,EasyPermissions.PERMISSION_REQUEST, EasyPermissions.MUST_PERMISSIONS);
 
     }
 
@@ -70,6 +69,28 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         };
         mThread = new Thread(mRunnable);
         mThread.start();
+    }
+
+    //在onPause中暂停会有个问题，直接卡主了
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+
+        mVideoView.playOnPause();
+        Log.i("===TAG===", "onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("===TAG===", "onPause");
+        mVideoView.playOnPause();
+    }*/
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.i("===TAG===", "onConfigurationChanged");
     }
 
     @Override
@@ -108,19 +129,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         }
     }
 
-
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-
+    /*权限相关*/
+    private void initPermission() {
+        int result = PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == -1) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
+        }
     }
 
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-        EasyPermissions.requestPermissions(this, EasyPermissions.PERMISSION_REQUEST, perms.toArray(new String[perms.size()]));
-    }
-
-    @Override
-    public void onPermissionsAllGranted() {
-
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

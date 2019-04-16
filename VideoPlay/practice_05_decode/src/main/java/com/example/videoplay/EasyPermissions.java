@@ -48,24 +48,6 @@ public class EasyPermissions {
     //相机权限
     public static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
 
-
-
-    private static final String TAG = "EasyPermissions";
-
-    public interface PermissionCallbacks extends
-            ActivityCompat.OnRequestPermissionsResultCallback {
-
-        void onPermissionsGranted(int requestCode, List<String> perms);
-
-        void onPermissionsDenied(int requestCode, List<String> perms);
-
-        void onPermissionsAllGranted();
-
-    }
-
-    /**
-
-     */
     public static boolean hasPermissions(Context context, String[] perms) {
         // Always return true for SDK < M, let the system deal with the permissions
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -84,21 +66,11 @@ public class EasyPermissions {
     }
 
 
-    public static void requestPermissions(final Object object, final int requestCode, final String[] perms) {
-
-        checkCallingObjectSuitability(object);
-
-        boolean shouldShowRationale = false;
-        for (String perm : perms) {
-            shouldShowRationale =
-                    shouldShowRationale || shouldShowRequestPermissionRationale(object, perm);
-        }
-    }
 
     /**
      * 直接获取权限，如相机
      */
-    public static void permissionsCamera(final Object object, final int requestCode, final String[] perms) {
+    public static void requestPermission(final Object object, final int requestCode, final String[] perms) {
 
         final Activity activity = getActivity(object);
         if (null == activity) {
@@ -108,61 +80,6 @@ public class EasyPermissions {
         checkCallingObjectSuitability(object);
 
         executePermissionsRequest(object, perms, requestCode);
-    }
-
-    /**
-     *
-     */
-    public static void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                                  int[] grantResults, Object object) {
-
-        checkCallingObjectSuitability(object);
-
-        // Make a collection of granted and denied permissions from the request.
-        ArrayList<String> granted = new ArrayList<>();
-        ArrayList<String> denied = new ArrayList<>();
-        for (int i = 0; i < permissions.length; i++) {
-            String perm = permissions[i];
-            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                granted.add(perm);
-            } else {
-                denied.add(perm);
-            }
-        }
-
-        // Report granted permissions, if any.
-        if (!granted.isEmpty()) {
-            // Notify callbacks
-            if (object instanceof PermissionCallbacks) {
-                ((PermissionCallbacks) object).onPermissionsGranted(requestCode, granted);
-            }
-        }
-
-        // Report denied permissions, if any.
-        if (!denied.isEmpty()) {
-            if (object instanceof PermissionCallbacks) {
-                ((PermissionCallbacks) object).onPermissionsDenied(requestCode, denied);
-            }
-        }
-
-        // If 100% successful, call annotated methods
-        if (!granted.isEmpty() && denied.isEmpty()) {
-            if (object instanceof PermissionCallbacks)
-                ((PermissionCallbacks) object).onPermissionsAllGranted();
-        }
-    }
-
-    @TargetApi(23)
-    private static boolean shouldShowRequestPermissionRationale(Object object, String perm) {
-        if (object instanceof Activity) {
-            return ActivityCompat.shouldShowRequestPermissionRationale((Activity) object, perm);
-        } else if (object instanceof Fragment) {
-            return ((Fragment) object).shouldShowRequestPermissionRationale(perm);
-        } else if (object instanceof android.app.Fragment) {
-            return ((android.app.Fragment) object).shouldShowRequestPermissionRationale(perm);
-        } else {
-            return false;
-        }
     }
 
     @TargetApi(23)
@@ -188,18 +105,6 @@ public class EasyPermissions {
             return ((android.app.Fragment) object).getActivity();
         } else {
             return null;
-        }
-    }
-
-    @TargetApi(11)
-    private static void startAppSettingsScreen(Object object,
-                                               Intent intent) {
-        if (object instanceof Activity) {
-            ((Activity) object).startActivityForResult(intent, SETTINGS_REQ_CODE);
-        } else if (object instanceof Fragment) {
-            ((Fragment) object).startActivityForResult(intent, SETTINGS_REQ_CODE);
-        } else if (object instanceof android.app.Fragment) {
-            ((android.app.Fragment) object).startActivityForResult(intent, SETTINGS_REQ_CODE);
         }
     }
 
