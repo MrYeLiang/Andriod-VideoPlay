@@ -5,9 +5,9 @@
 #ifndef VIDEOPLAY_IDEMUX_H
 #define VIDEOPLAY_IDEMUX_H
 
-#include "XData.h"
-#include "IObserver.h"
-#include "XParameter.h"
+#include "../XData.h"
+#include "../thread/IObserver.h"
+#include "../XParameter.h"
 
 
 //解封装接口

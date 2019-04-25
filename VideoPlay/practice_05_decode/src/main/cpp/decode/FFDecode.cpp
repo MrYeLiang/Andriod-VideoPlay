@@ -9,7 +9,7 @@ extern "C"
 }
 
 #include "FFDecode.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 
 void FFDecode::InitHard(void *vm)
 {

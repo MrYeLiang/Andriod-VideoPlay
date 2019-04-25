@@ -5,8 +5,8 @@
 #ifndef VIDEOPLAY_IRESAMPLE_H
 #define VIDEOPLAY_IRESAMPLE_H
 
-#include "IObserver.h"
-#include "XParameter.h"
+#include "../thread/IObserver.h"
+#include "../XParameter.h"
 
 class IResample: public IObserver
 {

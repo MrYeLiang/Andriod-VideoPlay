@@ -5,7 +5,7 @@
 #ifndef VIDEOPLAY_GLVIDEOVIEW_H
 #define VIDEOPLAY_GLVIDEOVIEW_H
 
-#include "XData.h"
+#include "../XData.h"
 #include "IVideoView.h"
 
 class XTexture;

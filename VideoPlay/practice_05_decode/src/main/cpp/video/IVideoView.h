@@ -5,7 +5,7 @@
 #ifndef VIDEOPLAY_IVIDEOVIEW_H
 #define VIDEOPLAY_IVIDEOVIEW_H
 
-#include "IObserver.h"
+#include "../thread/IObserver.h"
 
 class IVideoView: public IObserver
 {

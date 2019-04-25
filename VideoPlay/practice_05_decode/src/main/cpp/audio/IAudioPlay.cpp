@@ -3,7 +3,7 @@
 //
 
 #include "IAudioPlay.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 #include "IAudioPlay.h"
 
 void IAudioPlay::Clear()

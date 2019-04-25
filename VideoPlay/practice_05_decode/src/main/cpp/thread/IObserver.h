@@ -4,7 +4,7 @@
 
 #include <vector>
 #include "XThread.h"
-#include "XData.h"
+#include "../XData.h"
 #include <mutex>
 
 #ifndef VIDEOPLAY_IOBSERVER_H

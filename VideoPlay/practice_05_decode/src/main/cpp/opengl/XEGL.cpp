@@ -4,7 +4,7 @@
 #include <EGL/egl.h>
 #include <mutex>
 #include "XEGL.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 
 class CXEGL:public XEGL
 {

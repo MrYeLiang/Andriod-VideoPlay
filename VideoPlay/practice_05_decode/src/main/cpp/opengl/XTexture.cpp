@@ -3,7 +3,7 @@
 //
 #include "XTexture.h"
 #include "XShader.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 #include "XEGL.h"
 
 class CXTexture:public XTexture

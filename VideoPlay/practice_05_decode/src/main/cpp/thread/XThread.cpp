@@ -3,7 +3,7 @@
 //
 
 #include "XThread.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 #include <thread>
 #include <sys/syscall.h>
 #include <unistd.h>

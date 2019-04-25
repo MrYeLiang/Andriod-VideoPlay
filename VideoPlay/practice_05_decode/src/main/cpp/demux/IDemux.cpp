@@ -3,7 +3,7 @@
 //
 
 #include "IDemux.h"
-#include "XData.h"
+#include "../XData.h"
 
 void IDemux::Main()
 {

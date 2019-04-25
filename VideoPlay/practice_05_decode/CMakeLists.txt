@@ -23,29 +23,29 @@ set_target_properties(swresample PROPERTIES IMPORTED_LOCATION ${FF}/libswresampl
 add_library(native-lib
             SHARED
             src/main/cpp/native-lib.cpp
+            src/main/cpp/demux/IDemux.cpp
+            src/main/cpp/demux/FFDemux.cpp
+            src/main/cpp/decode/IDecode.cpp
+            src/main/cpp/decode/FFDecode.cpp
+            src/main/cpp/resample/IResample.cpp
+            src/main/cpp/resample/FFResample.cpp
+            src/main/cpp/audio/IAudioPlay.cpp
+            src/main/cpp/audio/SLAudioPlay.cpp
+            src/main/cpp/video/GLVideoView.cpp
+            src/main/cpp/video/IVideoView.cpp
+            src/main/cpp/opengl/XEGL.cpp
+            src/main/cpp/opengl/XShader.cpp
+            src/main/cpp/opengl/XTexture.cpp
+            src/main/cpp/builder/IPlayerBuilder.cpp
+            src/main/cpp/builder/FFPlayerBuilder.cpp
+            src/main/cpp/thread/XThread.cpp
+            src/main/cpp/thread/IObserver.cpp
             src/main/cpp/XLog.cpp
             src/main/cpp/XData.cpp
-            src/main/cpp/IDemux.cpp
-            src/main/cpp/FFDemux.cpp
-            src/main/cpp/IObserver.cpp
             src/main/cpp/XData.cpp
             src/main/cpp/Xlog.cpp
-            src/main/cpp/XThread.cpp
             src/main/cpp/XParameter.cpp
-            src/main/cpp/IDecode.cpp
-            src/main/cpp/FFDecode.cpp
-            src/main/cpp/GLVideoView.cpp
-            src/main/cpp/IVideoView.cpp
-            src/main/cpp/XEGL.cpp
-            src/main/cpp/XShader.cpp
-            src/main/cpp/XTexture.cpp
-            src/main/cpp/IResample.cpp
-            src/main/cpp/FFResample.cpp
-            src/main/cpp/IAudioPlay.cpp
-            src/main/cpp/SLAudioPlay.cpp
             src/main/cpp/IPlayer.cpp
-            src/main/cpp/IPlayerBuilder.cpp
-            src/main/cpp/FFPlayerBuilder.cpp
             src/main/cpp/IPlayerProxy.cpp
             )
 

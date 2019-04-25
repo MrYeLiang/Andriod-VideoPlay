@@ -6,8 +6,8 @@
 #define VIDEOPLAY_IDECODE_H
 
 #include <list>
-#include "IObserver.h"
-#include "XParameter.h"
+#include "../thread/IObserver.h"
+#include "../XParameter.h"
 
 //解码接口，支持硬解码
 class IDecode:public IObserver

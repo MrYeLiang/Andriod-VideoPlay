@@ -3,7 +3,7 @@
 //
 
 #include "FFDemux.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 #include "FFDemux.h"
 
 extern "C"{

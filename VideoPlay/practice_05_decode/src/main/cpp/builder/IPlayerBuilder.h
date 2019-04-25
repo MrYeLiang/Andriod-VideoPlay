@@ -5,7 +5,7 @@
 #ifndef VIDEOPLAY_IPLAYERBUILDER_H
 #define VIDEOPLAY_IPLAYERBUILDER_H
 
-#include "IPlayer.h"
+#include "../IPlayer.h"
 
 class IPlayerBuilder{
 public:

@@ -5,8 +5,8 @@
 #include "SLAudioPlay.h"
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
-#include "Xlog.h"
-#include "XParameter.h"
+#include "../Xlog.h"
+#include "../XParameter.h"
 
 static SLObjectItf engineSL = NULL;
 static SLEngineItf eng = NULL;

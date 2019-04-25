@@ -7,7 +7,7 @@ extern "C"
 }
 
 #include "IResample.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 #include "FFResample.h"
 #include <libavcodec/avcodec.h>
 

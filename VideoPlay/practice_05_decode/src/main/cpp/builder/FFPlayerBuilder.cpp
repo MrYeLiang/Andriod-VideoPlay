@@ -2,11 +2,11 @@
 // Created by 叶亮 on 2019/3/4.
 //
 #include "FFPlayerBuilder.h"
-#include "FFDemux.h"
-#include "FFDecode.h"
-#include "FFResample.h"
-#include "GLVideoView.h"
-#include "SLAudioPlay.h"
+#include "../demux/FFDemux.h"
+#include "../decode/FFDecode.h"
+#include "../resample/FFResample.h"
+#include "../video/GLVideoView.h"
+#include "../audio/SLAudioPlay.h"
 
 IDemux * FFPlayerBuilder::CreateDemux()
 {

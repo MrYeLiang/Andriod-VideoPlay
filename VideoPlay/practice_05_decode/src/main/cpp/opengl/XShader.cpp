@@ -4,7 +4,7 @@
 
 #include <GLES2/gl2.h>
 #include "XShader.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 
 //顶点着色器glsl
 #define GET_STR(x) #x

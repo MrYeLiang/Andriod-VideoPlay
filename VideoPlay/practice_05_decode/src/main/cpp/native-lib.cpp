@@ -5,7 +5,7 @@
 #include <jni.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
-#include "FFPlayerBuilder.h"
+#include "builder/FFPlayerBuilder.h"
 #include "IPlayerProxy.h"
 #include "Xlog.h"
 

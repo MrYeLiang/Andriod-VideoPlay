@@ -5,8 +5,8 @@
 #ifndef VIDEOPLAY_IAUDIOPLAY_H
 #define VIDEOPLAY_IAUDIOPLAY_H
 
-#include "IObserver.h"
-#include "XParameter.h"
+#include "../thread/IObserver.h"
+#include "../XParameter.h"
 #include <list>
 
 class IAudioPlay: public IObserver

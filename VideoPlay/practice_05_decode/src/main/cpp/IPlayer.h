@@ -6,12 +6,12 @@
 #define VIDEOPLAY_IPLAYER_H
 
 
-#include "XThread.h"
-#include "IDemux.h"
-#include "IDecode.h"
-#include "IResample.h"
-#include "IVideoView.h"
-#include "IAudioPlay.h"
+#include "thread/XThread.h"
+#include "demux/IDemux.h"
+#include "decode/IDecode.h"
+#include "resample/IResample.h"
+#include "video/IVideoView.h"
+#include "audio/IAudioPlay.h"
 
 class IPlayer : public XThread{
 public:

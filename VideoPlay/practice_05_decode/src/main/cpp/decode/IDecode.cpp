@@ -3,7 +3,7 @@
 //
 
 #include "IDecode.h"
-#include "Xlog.h"
+#include "../Xlog.h"
 
 //由主体notify的数据
 void IDecode::Update(XData pkt)
