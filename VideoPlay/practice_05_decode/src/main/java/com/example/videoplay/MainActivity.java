@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_play:
-                play("/storage/emulated/0/video.mp4");
+                play("rtmp://10.2.0.111:1935/live");
                 break;
         }
     }

@@ -55,7 +55,7 @@ bool FFDecode::Open(XParameter para, bool isHard)
     //1查找解码器
     AVCodec *cd = avcodec_find_decoder(p->codec_id);
 
-    if(isHard)
+    if(false)
     {
         cd = avcodec_find_decoder_by_name("h264_mediacodec");
     }
