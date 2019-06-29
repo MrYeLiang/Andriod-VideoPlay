@@ -6,6 +6,11 @@ extern "C"
 {
 #include <libavcodec/avcodec.h>
 #include <libavcodec/jni.h>
+
+#include <libavfilter/avfilter.h>
+#include <libavfilter/buffersink.h>
+#include <libavfilter/buffersrc.h>
+
 }
 
 #include "FFDecode.h"
@@ -86,14 +91,15 @@ bool FFDecode::Open(XParameter para, bool isHard)
 
     if(codec->codec_type == AVMEDIA_TYPE_VIDEO){
         this->isAudio = false;
+        initFilter(para);
     }else{
         this->isAudio = true;
     }
 
     mux.unlock();
+
     XLOGI("avcodec_open2 success!");
     return true;
-
 }
 
 bool FFDecode::SendPacket(XData pkt)
@@ -140,20 +146,126 @@ XData FFDecode::RecvFrame()
         return XData();
     }
     XData d;
-    d.data = (unsigned char *)frame;
+
     if(codec->codec_type == AVMEDIA_TYPE_VIDEO){
         d.size = (frame->linesize[0] + frame->linesize[1] + frame->linesize[2])*frame->height;
         d.width = frame->width;
         d.height = frame->height;
+
+        //filterFrame(frame);
     }else
     {
         //样本字节数 * 单通道样本数 * 通道数
         d.size = av_get_bytes_per_sample((AVSampleFormat)frame->format)*frame->nb_samples*2;
     }
+    d.data = (unsigned char *)frame;
     d.format = frame->format;
     memcpy(d.datas, frame->data, sizeof(d.datas));
     d.pts = frame->pts;
     pts = d.pts;
+
     mux.unlock();
     return d;
+}
+
+int FFDecode::initFilter(XParameter parameter){
+    //1 注册滤波器组件
+    avfilter_register_all();
+
+    //2 初始化图状结构
+    filter_graph = avfilter_graph_alloc();
+
+    //3.1 获取filter
+    AVFilter *buffersrc  = avfilter_get_by_name("buffer"); /* 输入buffer filter */
+
+    int ret;
+    char args[512];
+    AVRational time_base = *(parameter.time_base);/* 时间基数 */
+    snprintf(args, sizeof(args),
+             "video_size=%dx%d:pix_fmt=%d:time_base=%d/%d:pixel_aspect=%d/%d",
+             codec->width, codec->height, codec->pix_fmt,
+             time_base.num, time_base.den,
+             codec->sample_aspect_ratio.num, codec->sample_aspect_ratio.den);
+
+    ret = avfilter_graph_create_filter(&buffersrc_ctx, buffersrc, "in", args, NULL, filter_graph);
+    if (ret < 0) {
+        XLOGE("Cannot create buffer source === %d\n",ret);
+        return ret;
+    }
+
+    //3.2 获取filter
+    AVFilter *buffersink = avfilter_get_by_name("buffersink"); /* 输出buffer filter */
+
+    enum AVPixelFormat pix_fmts[] = {AV_PIX_FMT_YUV420P, AV_PIX_FMT_NONE };
+    AVBufferSinkParams *buffersink_params;
+    buffersink_params = av_buffersink_params_alloc();
+    buffersink_params->pixel_fmts = pix_fmts;
+
+    ret = avfilter_graph_create_filter(&buffersink_ctx, buffersink, "out", NULL, buffersink_params, filter_graph);
+    av_free(buffersink_params);
+    if (ret < 0) {
+        XLOGE("Cannot create buffer sink\n");
+        return ret;
+    }
+
+    XLOGI("avfilter_graph_create_filter suc");
+
+    //4.1 标识Filter在哪个节点后面
+    AVFilterInOut *outputs = avfilter_inout_alloc();
+    outputs->name       = av_strdup("in");
+    outputs->filter_ctx = buffersrc_ctx;
+    outputs->pad_idx    = 0;
+    outputs->next       = NULL;
+
+    AVFilterInOut *inputs  = avfilter_inout_alloc();
+    inputs->name       = av_strdup("out");
+    inputs->filter_ctx = buffersink_ctx;
+    inputs->pad_idx    = 0;
+    inputs->next       = NULL;
+
+    char filters_descr[512];
+    int videoWidth = 1920;
+    int videoHeight = 1080;
+    int cropLeftMargin = 180;
+    snprintf(filters_descr, sizeof(filters_descr), "crop=%d:%d:%d:0,vflip", videoWidth, videoHeight, cropLeftMargin);
+
+    //5 将这个filter加入图中
+    ret = avfilter_graph_parse_ptr(filter_graph, filters_descr, &inputs, &outputs, NULL);
+    if (ret < 0) {
+        XLOGE("Cannot avfilter_graph_parse_ptr\n");
+        return ret;
+    }
+
+    avfilter_inout_free(&outputs);
+    avfilter_inout_free(&inputs);
+
+    //6 配置构建的图
+    ret = avfilter_graph_config(filter_graph, NULL);
+
+    if (ret < 0) {//检查当前所构造的FilterGraph的完整性与可用性
+        XLOGE("Cannot avfilter_graph_config eror = %s",av_err2str(ret));
+        return ret;
+    }
+    XLOGI(" avfilter_graph_config suc");
+
+    return ret;
+}
+
+int FFDecode::filterFrame(AVFrame *frame) {
+    XLOGE("filterFrame start");
+    int ret;
+    //把解码后视频帧添加到filter_graph
+    ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, 0);
+    if (ret < 0) {
+        XLOGE("Could not av_buffersrc_add_frame");
+        return ret;
+    }
+    //把滤波后的视频帧从filter graph取出来
+    ret = av_buffersink_get_frame(buffersink_ctx, frame);
+    if (ret < 0) {
+        XLOGE("Could not av_buffersink_get_frame");
+        return ret;
+    }
+    XLOGE("filterFrame end");
+    return ret;
 }

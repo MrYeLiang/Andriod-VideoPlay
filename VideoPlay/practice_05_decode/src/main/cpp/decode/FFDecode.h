@@ -9,6 +9,8 @@
 
 struct AVCodecContext;
 struct AVFrame;
+struct AVFilterContext;
+struct AVFilterGraph;
 
 class FFDecode:public IDecode
 {
@@ -24,9 +26,16 @@ public:
 
     //从线程中获取解码结果
     virtual XData RecvFrame();
+
+    virtual int initFilter(XParameter parameter);
+    virtual int filterFrame(AVFrame *frame);
 protected:
     AVCodecContext *codec = 0;
     AVFrame *frame = 0;
     std::mutex mux;
+
+    AVFilterContext *buffersink_ctx;
+    AVFilterContext *buffersrc_ctx;//认为它是AVFilter的一个实例就OK了
+    AVFilterGraph *filter_graph;
 };
 #endif //VIDEOPLAY_FFDECODE_H

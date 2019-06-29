@@ -20,6 +20,9 @@ set_target_properties(swscale PROPERTIES IMPORTED_LOCATION ${FF}/libswscale.so)
 add_library(swresample SHARED IMPORTED)
 set_target_properties(swresample PROPERTIES IMPORTED_LOCATION ${FF}/libswresample.so)
 
+add_library(avfilter SHARED IMPORTED)
+set_target_properties(avfilter PROPERTIES IMPORTED_LOCATION ${FF}/libavfilter.so)
+
 add_library(native-lib
             SHARED
             src/main/cpp/native-lib.cpp
@@ -56,5 +59,5 @@ target_link_libraries(native-lib
                       GLESv2
                       OpenSLES
                       android
-                      avcodec avformat avutil swscale swresample
+                      avcodec avformat avutil swscale swresample avfilter
                        ${log-lib} )
