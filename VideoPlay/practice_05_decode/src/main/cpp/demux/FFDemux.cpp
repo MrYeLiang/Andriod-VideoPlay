@@ -108,6 +108,7 @@ XParameter FFDemux::GetAPara()
     audioStream = re;
     XParameter para;
     para.para = ic->streams[re]->codecpar;
+    para.time_base = &(ic->streams[re]->time_base);
     mux.unlock();
     return para;
 }
