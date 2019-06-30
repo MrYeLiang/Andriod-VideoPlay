@@ -152,7 +152,7 @@ XData FFDecode::RecvFrame()
         d.width = frame->width;
         d.height = frame->height;
 
-        //filterFrame(frame);
+        filterFrame(frame);
     }else
     {
         //样本字节数 * 单通道样本数 * 通道数
@@ -223,11 +223,27 @@ int FFDecode::initFilter(XParameter parameter){
     inputs->pad_idx    = 0;
     inputs->next       = NULL;
 
-    char filters_descr[512];
-    int videoWidth = 1920;
-    int videoHeight = 1080;
-    int cropLeftMargin = 180;
-    snprintf(filters_descr, sizeof(filters_descr), "crop=%d:%d:%d:0,vflip", videoWidth, videoHeight, cropLeftMargin);
+    char *filters_descr;
+
+    //改变颜色水印
+    char *filters_color = "lutyuv='u=128:v=128'";
+
+    //文字水印，暂不支持可能编译时没有添加文字选项
+    char *filters_text = "drawtext=fontsize=20:fontfile=Kaiti.ttf:text='中文水印':fontcolor=green:box=1:boxcolor=yellow";
+
+    //添加图片水印
+    char *filters_img = "movie=/storage/emulated/0/filter_logo.png[wm];[in][wm]overlay=100:100[out]";
+
+    //视频二倍速
+    char *filters_speed_video = "setpts=0.5*PTS";
+
+    //音频二倍速
+    char *filters_speed_audio = "atempo=2.0";
+
+    //音视频二倍速
+    char * filter_spped_both = "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]";
+
+    filters_descr = filters_img;
 
     //5 将这个filter加入图中
     ret = avfilter_graph_parse_ptr(filter_graph, filters_descr, &inputs, &outputs, NULL);
@@ -252,7 +268,6 @@ int FFDecode::initFilter(XParameter parameter){
 }
 
 int FFDecode::filterFrame(AVFrame *frame) {
-    XLOGE("filterFrame start");
     int ret;
     //把解码后视频帧添加到filter_graph
     ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, 0);
@@ -266,6 +281,5 @@ int FFDecode::filterFrame(AVFrame *frame) {
         XLOGE("Could not av_buffersink_get_frame");
         return ret;
     }
-    XLOGE("filterFrame end");
     return ret;
 }
